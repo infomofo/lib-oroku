@@ -3,19 +3,14 @@ package com.com.infomofo.oroku.webpage
 import java.io.File
 import java.net.URL
 
+import com.infomofo.oroku.models
 import com.typesafe.scalalogging.LazyLogging
 import org.joda.time.DateTime
-import org.jsoup.nodes.{Document, Element}
-import org.jsoup.select.Elements
-import org.jsoup.{Jsoup, Connection}
+import org.jsoup.nodes.Document
+import org.jsoup.{Connection, Jsoup}
 
 import scala.collection.JavaConverters._
-import scala.collection.mutable
-
-import com.infomofo.oroku.models
-
 import scala.io.Source
-import scala.util.Try
 
 object PageShredder {
   private val openGraphPropertyPattern = "og:(.*)".r
@@ -81,87 +76,10 @@ object PageShredder {
  * @param document a document representing a webpage
  * @param url an optional additional url that indicates where the document was parsed
  */
-class PageShredder(document: Document, url: Option[URL] = None) extends LazyLogging {
+class PageShredder(document: Document, url: Option[URL] = None) extends OpenGraphMetadataShredder with LazyLogging {
 
   private lazy val headElement = document.head
-  private lazy val metaTags = headElement.select("meta")
-
-  private val usedMetaTags = new mutable.HashSet[Element]()
-
-  private def getMeta[MetaType](metaTypeConstructor: (Element) => MetaType)(implicit tagName: String, localMetaTags: Elements): Option[MetaType] = {
-    val matchingTag = metaTags.select(s"meta[property=$tagName]").iterator().asScala.toList.headOption
-    matchingTag map {
-      element =>
-        usedMetaTags += element
-        metaTypeConstructor(element)
-    }
-  }
-
-  private def getMetaString(implicit tagName: String, localMetaTags: Elements = metaTags): Option[models.MetaString] = {
-    getMeta {
-      case element =>
-        models.MetaString(value = element.attr("content"), tag = element.toString)
-    }
-  }
-
-  private def getMetaOpenGraphType(implicit tagName: String, localMetaTags: Elements = metaTags): Option[models.MetaOpenGraphType] = {
-    getMeta {
-      element =>
-        usedMetaTags += element
-        val matchedOgType = models.OpenGraphType(element.attr("content"))
-        matchedOgType match {
-          case models.OpenGraphType.UNDEFINED(unknownType) =>
-            logger.warn(s"Page found with an unknown open graph type $unknownType")
-          case _ =>
-        }
-        models.MetaOpenGraphType(value = matchedOgType, tag = element.toString)
-    }
-  }
-
-  private def getMetaInt(implicit tagName: String, localMetaTags: Elements = metaTags): Option[models.MetaInteger] = {
-    getMeta {
-      element =>
-        models.MetaInteger(value = element.attr("content").toInt, tag = element.toString)
-    }
-  }
-
-  /**
-   * Data that can be parsed from the headers matching the open graph format
-   */
-  lazy val openGraphMetadata = {
-    Try {
-      val ogTitle = getMetaString("og:title")
-      val ogType = getMetaOpenGraphType("og:type")
-      val ogImage = getMetaString("og:image")
-      val ogImageMimeType = getMetaString("og:image:type")
-      val ogImageWidth = getMetaInt("og:image:width")
-      val ogImageHeight = getMetaInt("og:image:height")
-      val ogUrl = getMetaString("og:url")
-      val ogSiteName = getMetaString("og:site_name")
-      val ogDescription = getMetaString("og:description")
-
-      val fbAppId = getMetaString("fb:app_id")
-
-      Some(models.OpenGraphMetadata(
-        title = ogTitle.get,
-        openGraphType = ogType.get,
-        image = models.OpenGraphMedia(
-          url = ogImage.get,
-          mimeType = ogImageMimeType,
-          width = ogImageHeight,
-          height = ogImageWidth
-        ),
-        url = ogUrl.get,
-        siteName = ogSiteName,
-        description = ogDescription,
-        appId = fbAppId
-      ))
-    }.recover {
-      case e =>
-        logger.warn("Could not find expected metadata for open graph", e)
-        None
-    }.get
-  }
+  protected override lazy val metaTags = headElement.select("meta")
 
   /**
    * All aggregate page information that can be shredded from a page
