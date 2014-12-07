@@ -88,18 +88,24 @@ class PageShredder(document: Document, url: Option[URL] = None) extends LazyLogg
 
   private val usedMetaTags = new mutable.HashSet[Element]()
 
-  private def getMetaString(tagName: String, metaTags: Elements = metaTags): Option[models.MetaString] = {
+  private def getMeta[MetaType](metaTypeConstructor: (Element) => MetaType)(implicit tagName: String, localMetaTags: Elements): Option[MetaType] = {
     val matchingTag = metaTags.select(s"meta[property=$tagName]").iterator().asScala.toList.headOption
     matchingTag map {
       element =>
         usedMetaTags += element
+        metaTypeConstructor(element)
+    }
+  }
+
+  private def getMetaString(implicit tagName: String, localMetaTags: Elements = metaTags): Option[models.MetaString] = {
+    getMeta {
+      case element =>
         models.MetaString(value = element.attr("content"), tag = element.toString)
     }
   }
 
-  private def getMetaType(tagName: String, metaTags: Elements = metaTags): Option[models.MetaOpenGraphType] = {
-    val matchingTag = metaTags.select(s"meta[property=$tagName]").iterator().asScala.toList.headOption
-    matchingTag map {
+  private def getMetaOpenGraphType(implicit tagName: String, localMetaTags: Elements = metaTags): Option[models.MetaOpenGraphType] = {
+    getMeta {
       element =>
         usedMetaTags += element
         val matchedOgType = models.OpenGraphType(element.attr("content"))
@@ -112,14 +118,24 @@ class PageShredder(document: Document, url: Option[URL] = None) extends LazyLogg
     }
   }
 
+  private def getMetaInt(implicit tagName: String, localMetaTags: Elements = metaTags): Option[models.MetaInteger] = {
+    getMeta {
+      element =>
+        models.MetaInteger(value = element.attr("content").toInt, tag = element.toString)
+    }
+  }
+
   /**
    * Data that can be parsed from the headers matching the open graph format
    */
   lazy val openGraphMetadata = {
     Try {
       val ogTitle = getMetaString("og:title")
-      val ogType = getMetaType("og:type")
+      val ogType = getMetaOpenGraphType("og:type")
       val ogImage = getMetaString("og:image")
+      val ogImageMimeType = getMetaString("og:image:type")
+      val ogImageWidth = getMetaInt("og:image:width")
+      val ogImageHeight = getMetaInt("og:image:height")
       val ogUrl = getMetaString("og:url")
       val ogSiteName = getMetaString("og:site_name")
       val ogDescription = getMetaString("og:description")
@@ -130,7 +146,10 @@ class PageShredder(document: Document, url: Option[URL] = None) extends LazyLogg
         title = ogTitle.get,
         openGraphType = ogType.get,
         image = models.OpenGraphMedia(
-          url = ogImage.get
+          url = ogImage.get,
+          mimeType = ogImageMimeType,
+          width = ogImageHeight,
+          height = ogImageWidth
         ),
         url = ogUrl.get,
         siteName = ogSiteName,
