@@ -1,4 +1,4 @@
-package com.com.infomofo.oroku.webpage
+package com.infomofo.oroku.shredder
 
 import com.infomofo.oroku.models
 import com.typesafe.scalalogging.LazyLogging
@@ -6,8 +6,11 @@ import org.jsoup.select.Elements
 
 import scala.util.Try
 
-private[webpage] trait OpenGraphMetadataShredder extends MetaShredder with LazyLogging {
-  protected def getMetaOpenGraphType(implicit tagName: String, localMetaTags: Elements = metaTags) : Option[models.MetaOpenGraphType] = {
+/**
+ * This trait defines the behavior for shredding open graph metadata from meta tags
+ */
+private[shredder] trait OpenGraphMetadataShredder extends MetaShredder with LazyLogging {
+  protected def getMetaOpenGraphType(implicit tagName: String, localMetaTags: Elements = metaTags) = {
     getMeta {
       element =>
         usedMetaTags += element

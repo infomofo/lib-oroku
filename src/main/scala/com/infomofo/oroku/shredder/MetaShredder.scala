@@ -1,4 +1,4 @@
-package com.com.infomofo.oroku.webpage
+package com.infomofo.oroku.shredder
 
 import com.infomofo.oroku.models
 import org.jsoup.nodes.Element
@@ -11,7 +11,7 @@ import scala.collection.JavaConverters._
 /**
  * A trait for shredding information on a page contained in <meta> tags in the head of the document
  */
-private[webpage] trait MetaShredder {
+private[shredder] trait MetaShredder {
 
   protected def metaTags: Elements
   protected val usedMetaTags = new mutable.HashSet[Element]()

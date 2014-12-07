@@ -1,9 +1,10 @@
-package com.com.infomofo.oroku.webpage
+package com.infomofo.oroku.shredder
 
 import java.io.File
 import java.net.URL
 
 import com.infomofo.oroku.models
+import com.infomofo.oroku.structure.StructuredInformation
 import com.typesafe.scalalogging.LazyLogging
 import org.joda.time.DateTime
 import org.jsoup.nodes.Document
@@ -81,12 +82,15 @@ class PageShredder(document: Document, url: Option[URL] = None) extends OpenGrap
   private lazy val headElement = document.head
   protected override lazy val metaTags = headElement.select("meta")
 
+  private lazy val structuredInfos: Seq[StructuredInformation] =
+    openGraphMetadata.toSeq.map(StructuredInformation(_))
+
   /**
    * All aggregate page information that can be shredded from a page
    */
   lazy val pageInfo = {
     val returnValue = models.PageInfo(
-      titles = openGraphMetadata.map(_.title.value).toSeq,
+      titles = structuredInfos.flatMap(_.titles),
       urls = openGraphMetadata.map(_.url.value).toSeq ++ url.map(_.toString),
       keywords = Nil,
       locations = Nil,

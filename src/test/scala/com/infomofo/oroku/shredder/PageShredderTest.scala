@@ -1,8 +1,7 @@
-package com.infomofo.oroku.webpage
+package com.infomofo.oroku.shredder
 
 import java.net.URL
 
-import com.com.infomofo.oroku.webpage.PageShredder
 import com.infomofo.oroku.models.OpenGraphType
 import org.scalatest._
 
