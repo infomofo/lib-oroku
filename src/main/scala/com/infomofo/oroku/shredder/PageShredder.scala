@@ -82,6 +82,9 @@ class PageShredder(document: Document, url: Option[URL] = None) extends OpenGrap
   private lazy val headElement = document.head
   protected override lazy val metaTags = headElement.select("meta")
 
+  /**
+   * a sequence of structured info objects shredded from this page, in order of their priority
+   */
   private lazy val structuredInfos: Seq[StructuredInformation] =
     openGraphMetadata.toSeq.map(StructuredInformation(_))
 
@@ -91,13 +94,14 @@ class PageShredder(document: Document, url: Option[URL] = None) extends OpenGrap
   lazy val pageInfo = {
     val returnValue = models.PageInfo(
       titles = structuredInfos.flatMap(_.titles),
-      urls = openGraphMetadata.map(_.url.value).toSeq ++ url.map(_.toString),
+      urls = structuredInfos.flatMap(_.urls) ++ url.map(_.toString),
+      descriptions = structuredInfos.flatMap(_.descriptions),
       keywords = Nil,
       locations = Nil,
       retrievedAt = new DateTime(),
       site = models.Site(
-        name = openGraphMetadata.flatMap(_.siteName.map(_.value)).getOrElse(""),
-        siteType = openGraphMetadata.map(_.openGraphType.value.toString)
+        name = structuredInfos.flatMap(_.siteNames).headOption.getOrElse(""),
+        siteType = structuredInfos.flatMap(_.siteTypes).headOption
       ),
       openGraphMetadata = openGraphMetadata
     )

@@ -16,6 +16,8 @@ class PageShredderTest extends FlatSpec with Matchers {
     shreddedPage.pageInfo.openGraphMetadata.isDefined should be (true)
     shreddedPage.pageInfo.openGraphMetadata.get.description should be (None)
     shreddedPage.pageInfo.openGraphMetadata.get.title.value should be ("The Rock")
+
+    shreddedPage.pageInfo.titles.contains(shreddedPage.pageInfo.openGraphMetadata.get.title.value) should be (true)
   }
 
   "An actual live page" should "have all the expected data" in {
@@ -32,5 +34,9 @@ class PageShredderTest extends FlatSpec with Matchers {
     openGraphMetadata.image.mimeType.get.value should be ("image/png")
     openGraphMetadata.image.width.get.value should be (300)
     openGraphMetadata.appId.get.value should be ("115190258555800")
+
+    shreddedPage.pageInfo.titles.contains(openGraphMetadata.title.value) should be (true)
+    shreddedPage.pageInfo.urls.contains(openGraphMetadata.url.value) should be (true)
+    shreddedPage.pageInfo.descriptions.contains(openGraphMetadata.description.get.value) should be (true)
   }
 }

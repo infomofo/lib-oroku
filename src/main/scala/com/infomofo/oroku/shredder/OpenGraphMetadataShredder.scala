@@ -44,7 +44,7 @@ private[shredder] trait OpenGraphMetadataShredder extends MetaShredder with Lazy
       Some(models.OpenGraphMetadata(
         title = ogTitle.get,
         openGraphType = ogType.get,
-        image = models.OpenGraphMedia(
+        image = models.MediaObject(
           url = ogImage.get,
           mimeType = ogImageMimeType,
           width = ogImageHeight,

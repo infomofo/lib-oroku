@@ -106,6 +106,23 @@
 				}
 			]
 		},
+		"meta_decimal": {
+		  "description": "An html head meta tag that has been parsed for decimal content.",
+		  "fields": [
+			{
+			  "name": "value",
+			  "type": "decimal",
+			  "description": "The decimal value of this meta tag.",
+			  "required": true
+			},
+			{
+			  "name": "tag",
+			  "type": "string",
+			  "description": "The raw html meta tag that this value was derived from.",
+			  "required": true
+			}
+		  ]
+		},
 		"meta_integer": {
 			"description": "An html head meta tag that has been parsed for integer content.",
 			"fields": [
@@ -157,6 +174,25 @@
 				}
 			]
 		},
+		"price": {
+		  	"description": "A price for a product on this page",
+			"fields": [
+			  {
+				"name": "amount",
+				"type": "meta_decimal",
+				"description": "The amount of this price.",
+				"required": true,
+				"example": "1.99"
+			  },
+			  {
+				"name": "currency",
+				"type": "meta_string",
+				"description": "The currency that this product is presented in ISO-4217 currency code https://en.wikipedia.org/wiki/ISO_4217#Active_codes",
+				"required": false,
+				"example": "USD"
+			  }
+			]
+		},
 		"twitter_user": {
 			"description": "User info declared for parsing into a twitter card.  See: https://dev.twitter.com/cards/markup",
 			"fields": [
@@ -172,32 +208,6 @@
 					"type": "meta_integer",
 					"description": "Same as username, but the user's Twitter ID",
 					"required": false
-				}
-			]
-		},
-		"twitter_image": {
-			"description": "An image represented on a twitter card for a page.",
-			"fields": [
-				{
-					"name": "src",
-					"type": "meta_string",
-					"description": "URL of image to use in the card. Image must be less than 1MB in size.",
-					"required": true,
-					"example": "http://example.com/ogp.jpg"
-				},
-				{
-					"name": "width",
-					"type": "meta_integer",
-					"description": "The number of pixels wide. Does not apply to audio.",
-					"required": false,
-					"example": "400"
-				},
-				{
-					"name": "height",
-					"type": "meta_integer",
-					"description": "The number of pixels high.  Does not apply to audio.",
-					"required": false,
-					"example": "400"
 				}
 			]
 		},
@@ -300,7 +310,7 @@
 				}
 			]
 		},
-		"open_graph_media": {
+		"media_object": {
 			"description": "A media type specified by open graph. The og:image, og:audio, and og:video property has some optional structured properties.",
 			"fields": [
 				{
@@ -359,7 +369,7 @@
 				},
 				{
 					"name": "image",
-					"type": "open_graph_media",
+					"type": "media_object",
 					"description": "An image URL which should represent your object within the graph",
 					"required": true,
 					"example": "http://ia.media-imdb.com/images/rock.jpg"
@@ -407,13 +417,13 @@
 				},
 				{
 					"name": "video",
-					"type": "open_graph_media",
+					"type": "media_object",
 					"description": "A URL to a video file that complements this object.",
 					"required": false
 				},
 				{
 					"name": "audio",
-					"type": "open_graph_media",
+					"type": "media_object",
 					"description": "A URL to a audio file that complements this object.",
 					"required": false
 				},
@@ -440,6 +450,24 @@
 					"type": "meta_string",
 					"description": "A facebook profile id associated with this page.",
 					"required": false
+				},
+				{
+				  "name": "sale_price",
+				  "type": "price",
+				  "description": "",
+				  "required": false
+				},
+				{
+				  "name": "price",
+				  "type": "price",
+				  "description": "",
+				  "required": false
+				},
+				{
+				  "name": "original_price",
+				  "type": "price",
+				  "description": "",
+				  "required": false
 				}
 			]
 		},
@@ -694,7 +722,7 @@
 				},
 				{
 					"name": "images",
-					"type": "[twitter_image]",
+					"type": "[media_object]",
 					"description": "Primary image to use in the card.",
 					"required": false
 				},
@@ -743,7 +771,7 @@
 					"name": "keywords",
 					"type": "[string]",
 					"description": "keywords found on the page",
-					"requried": false
+					"required": false
 				},
 				{
 					"name": "categories",
@@ -755,13 +783,19 @@
 					"name": "locations",
 					"type": "[string]",
 					"description": "locations found on the page",
-					"requried": false
+					"required": false
+				},
+				{
+				  "name": "prices",
+				  "type": "[price]",
+				  "description": "prices found on the page",
+				  "required": false
 				},
 				{
 					"name": "retrieved_at",
 					"type": "date-time-iso8601",
 					"description": "the time that the info was retrieved from the live page",
-					"requried": true
+					"required": true
 				},
 				{
 					"name": "site",
@@ -808,7 +842,7 @@
 			"operations": [
 			{
 				"method": "GET",
-				"path": "/info_for_url",
+				"path": "",
 				"description": "shreds page info from a specified web page",
 				"parameters": [
 					{
