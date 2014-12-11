@@ -11,7 +11,7 @@ import scala.collection.JavaConverters._
 /**
  * A trait for shredding information on a page contained in <meta> tags in the head of the document
  */
-private[shredder] trait MetaShredder {
+trait MetaShredder {
 
   protected def metaTags: Elements
   protected val usedMetaTags = new mutable.HashSet[Element]()
@@ -25,7 +25,7 @@ private[shredder] trait MetaShredder {
    * @return An option of the expected return type
    */
   protected def getMeta[MetaType](metaTypeConstructor: (Element) => MetaType)(implicit tagName: String, localMetaTags: Elements) = {
-    val matchingTag = localMetaTags.select(s"meta[property=$tagName]").iterator().asScala.toList.headOption
+    val matchingTag = localMetaTags.select(s"meta[$tagName]").iterator().asScala.toList.headOption
     matchingTag map {
       element =>
         usedMetaTags += element

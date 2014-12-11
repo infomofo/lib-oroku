@@ -77,7 +77,10 @@ object PageShredder {
  * @param document a document representing a webpage
  * @param url an optional additional url that indicates where the document was parsed
  */
-class PageShredder(document: Document, url: Option[URL] = None) extends OpenGraphMetadataShredder with LazyLogging {
+class PageShredder(document: Document, url: Option[URL] = None)
+  extends OpenGraphMetadataShredder
+  with TwitterCardMetadataShredder
+  with LazyLogging {
 
   private lazy val headElement = document.head
   protected override lazy val metaTags = headElement.select("meta")
@@ -85,25 +88,33 @@ class PageShredder(document: Document, url: Option[URL] = None) extends OpenGrap
   /**
    * a sequence of structured info objects shredded from this page, in order of their priority
    */
-  private lazy val structuredInfos: Seq[StructuredInformation] =
-    openGraphMetadata.toSeq.map(StructuredInformation(_))
+  private lazy val structuredInfos: Seq[StructuredInformation] = {
+    val structuredOpenGraphMetadata = openGraphMetadata.toSeq.map(StructuredInformation(_))
+    val structuredTwitterData = twitterCardMetadata.toSeq.map(StructuredInformation(_))
+
+    structuredOpenGraphMetadata ++ structuredTwitterData
+  }
 
   /**
    * All aggregate page information that can be shredded from a page
    */
   lazy val pageInfo = {
     val returnValue = models.PageInfo(
-      titles = structuredInfos.flatMap(_.titles),
-      urls = structuredInfos.flatMap(_.urls) ++ url.map(_.toString),
-      descriptions = structuredInfos.flatMap(_.descriptions),
+      titles = structuredInfos.flatMap(_.titles).distinct,
+      images = structuredInfos.flatMap(_.images).distinct,
+      descriptions = structuredInfos.flatMap(_.descriptions).distinct,
+      urls = (structuredInfos.flatMap(_.urls) ++ url.map(_.toString)).distinct,
       keywords = Nil,
+      categories = Nil,
       locations = Nil,
+      prices = Nil,
       retrievedAt = new DateTime(),
       site = models.Site(
         name = structuredInfos.flatMap(_.siteNames).headOption.getOrElse(""),
         siteType = structuredInfos.flatMap(_.siteTypes).headOption
       ),
-      openGraphMetadata = openGraphMetadata
+      openGraphMetadata = openGraphMetadata,
+      twitterCardMetadata = twitterCardMetadata
     )
 
     val unhandledMetaTags = metaTags.iterator.asScala.filterNot(usedMetaTags.contains)

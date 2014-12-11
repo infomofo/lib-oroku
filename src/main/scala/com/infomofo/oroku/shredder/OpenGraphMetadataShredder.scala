@@ -13,7 +13,6 @@ private[shredder] trait OpenGraphMetadataShredder extends MetaShredder with Lazy
   protected def getMetaOpenGraphType(implicit tagName: String, localMetaTags: Elements = metaTags) = {
     getMeta {
       element =>
-        usedMetaTags += element
         val matchedOgType = models.OpenGraphType(element.attr("content"))
         matchedOgType match {
           case models.OpenGraphType.UNDEFINED(unknownType) =>
@@ -29,28 +28,31 @@ private[shredder] trait OpenGraphMetadataShredder extends MetaShredder with Lazy
    */
   lazy val openGraphMetadata = {
     Try {
-      val ogTitle = getMetaString("og:title")
-      val ogType = getMetaOpenGraphType("og:type")
-      val ogImage = getMetaString("og:image")
-      val ogImageMimeType = getMetaString("og:image:type")
-      val ogImageWidth = getMetaInt("og:image:width")
-      val ogImageHeight = getMetaInt("og:image:height")
-      val ogUrl = getMetaString("og:url")
-      val ogSiteName = getMetaString("og:site_name")
-      val ogDescription = getMetaString("og:description")
+      val ogTitle = getMetaString("property=og:title")
+      val ogType = getMetaOpenGraphType("property=og:type")
+      val ogImage = getMetaString("property=og:image")
+      val ogImageMimeType = getMetaString("property=og:image:type")
+      val ogImageWidth = getMetaInt("property=og:image:width")
+      val ogImageHeight = getMetaInt("property=og:image:height")
+      val ogUrl = getMetaString("property=og:url")
+      val ogSiteName = getMetaString("property=og:site_name")
+      val ogDescription = getMetaString("property=og:description")
 
-      val fbAppId = getMetaString("fb:app_id")
+      val fbAppId = getMetaString("property=fb:app_id")
 
       Some(models.OpenGraphMetadata(
-        title = ogTitle.get,
-        openGraphType = ogType.get,
-        image = models.MediaObject(
-          url = ogImage.get,
-          mimeType = ogImageMimeType,
-          width = ogImageHeight,
-          height = ogImageWidth
-        ),
-        url = ogUrl.get,
+        title = ogTitle,
+        openGraphType = ogType,
+        image = ogImage.map {
+          url =>
+            models.MediaObject(
+              url = url,
+              mimeType = ogImageMimeType,
+              width = ogImageHeight,
+              height = ogImageWidth
+            )
+        },
+        url = ogUrl,
         siteName = ogSiteName,
         description = ogDescription,
         appId = fbAppId

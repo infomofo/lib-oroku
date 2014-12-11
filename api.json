@@ -214,38 +214,38 @@
 		"twitter_custom_field": {
 			"description": "A customizable data field to display on a twitter card",
 			"fields": [
+			  	{
+					"name": "data",
+					"description": "Top customizable data field, can be a relatively short string",
+					"type": "meta_string",
+					"required": true,
+					"example": "$3.99"
+			  	},
 				{
 					"name": "label",
 					"description": "Customizable label or units for the information in twitter:data1 (best practice: use all caps)",
 					"type": "meta_string",
 					"required": false,
 					"example": "PRICE"
-				},
-				{
-					"name": "data",
-					"description": "Top customizable data field, can be a relatively short string",
-					"type": "meta_string",
-					"required": true,
-					"example": "$3.99"
 				}
 			]
 		},
 		"twitter_app_store_info": {
 			"description": "Information linking twitter card data to an app store. See https://dev.twitter.com/cards/types/app",
 			"fields": [
+			  	{
+					"name": "id",
+					"description": "Should be the represenation of your app id in its respective store",
+					"type": "meta_string",
+					"required": true,
+					"example": "307234931"
+			  	},
 				{
 					"name": "name",
 					"description": "Name of your app",
 					"type": "meta_string",
 					"required": false,
 					"example": "Cannonball"
-				},
-				{
-					"name": "id",
-					"description": "Should be the represenation of your app id in its respective store",
-					"type": "meta_string",
-					"required": true,
-					"example": "307234931"
 				},
 				{
 					"name": "url",
@@ -358,20 +358,20 @@
 					"type": "meta_string",
 					"description": "The title of your object as it should appear within the graph.",
 					"example": "The Rock",
-					"required": true
+					"required": false
 				},
 				{
 					"name": "open_graph_type",
 					"type": "meta_open_graph_type",
 					"description": "The type of your object. Depending on the type specified, other optional properties may be present.",
 					"example": "video.movie",
-					"required": true
+					"required": false
 				},
 				{
 					"name": "image",
 					"type": "media_object",
 					"description": "An image URL which should represent your object within the graph",
-					"required": true,
+					"required": false,
 					"example": "http://ia.media-imdb.com/images/rock.jpg"
 				},
 				{
@@ -379,7 +379,7 @@
 					"type": "meta_string",
 					"description": "The canonical UJRL of your object that will be used as its permanent ID in the graph",
 					"example": "http://www.imdb.com/title/tt0117500/",
-					"required": true
+					"required": false
 				},
 				{
 					"name": "description",
@@ -682,11 +682,24 @@
 			"description": "Additinal information provided by a webpage to control how a link to that page is rendered when posted on twitter. See also: https://dev.twitter.com/cards/markup.",
 			"fields": [
 				{
-					"name": "card",
-					"type": "meta_twitter_card_type",
-					"description": "the card type",
-					"example": "summary",
-					"required": true
+				  	"name": "images",
+				  	"type": "[media_object]",
+				  	"description": "Primary image to use in the card.",
+				  	"required": true
+				},
+				{
+				  "name": "card",
+				  "type": "meta_twitter_card_type",
+				  "description": "the card type",
+				  "example": "summary",
+				  "required": false
+				},
+				{
+				  	"name": "url",
+					"type": "meta_string",
+					"description": "the pages canonical url",
+					"example": "https://www.twitter.com",
+					"required": false
 				},
 				{
 					"name": "domain",
@@ -721,12 +734,6 @@
 					"required": false
 				},
 				{
-					"name": "images",
-					"type": "[media_object]",
-					"description": "Primary image to use in the card.",
-					"required": false
-				},
-				{
 					"name": "app",
 					"type": "twitter_app_info",
 					"description": "Information linking this page to app stores",
@@ -747,19 +754,20 @@
 				{
 					"name": "titles",
 					"type": "[string]",
-					"description": "titles found on the page- sorted in order of how relevant they are"
+					"description": "titles found on the page- sorted in order of how relevant they are",
+					"required": true
 				},
 				{
 					"name": "images",
 					"type": "[string]",
 					"description": "images found on the page- sorted in order of how relevant they are",
-					"required": false
+					"required": true
 				},
 				{
 					"name": "descriptions",
 					"type": "[string]",
 					"description": "descriptions found on the page- sorted in order of how relevant they are",
-					"required": false
+					"required": true
 				},
 				{
 					"name": "urls",
@@ -771,25 +779,25 @@
 					"name": "keywords",
 					"type": "[string]",
 					"description": "keywords found on the page",
-					"required": false
+					"required": true
 				},
 				{
 					"name": "categories",
 					"type": "[string]",
 					"description": "the category of the product on the page",
-					"required": false
+					"required": true
 				},
 				{
 					"name": "locations",
 					"type": "[string]",
 					"description": "locations found on the page",
-					"required": false
+					"required":  true
 				},
 				{
-				  "name": "prices",
-				  "type": "[price]",
-				  "description": "prices found on the page",
-				  "required": false
+				  	"name": "prices",
+				  	"type": "[price]",
+				  	"description": "prices found on the page",
+				  	"required": true
 				},
 				{
 					"name": "retrieved_at",

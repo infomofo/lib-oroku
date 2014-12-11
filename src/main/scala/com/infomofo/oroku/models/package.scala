@@ -92,10 +92,10 @@ case class MetaTwitterCardType(
  * Information about the site presented in opengraph format (see ogp.me)
  */
 case class OpenGraphMetadata(
-                              title: com.infomofo.oroku.models.MetaString,
-                              openGraphType: com.infomofo.oroku.models.MetaOpenGraphType,
-                              image: com.infomofo.oroku.models.MediaObject,
-                              url: com.infomofo.oroku.models.MetaString,
+                              title: scala.Option[com.infomofo.oroku.models.MetaString] = None,
+                              openGraphType: scala.Option[com.infomofo.oroku.models.MetaOpenGraphType] = None,
+                              image: scala.Option[com.infomofo.oroku.models.MediaObject] = None,
+                              url: scala.Option[com.infomofo.oroku.models.MetaString] = None,
                               description: scala.Option[com.infomofo.oroku.models.MetaString] = None,
                               determiner: scala.Option[com.infomofo.oroku.models.MetaString] = None,
                               locale: scala.Option[com.infomofo.oroku.models.MetaString] = None,
@@ -119,13 +119,13 @@ case class OpenGraphMetadata(
  */
 case class PageInfo(
                      titles: Seq[String],
-                     images: Seq[String] = Nil,
-                     descriptions: Seq[String] = Nil,
+                     images: Seq[String],
+                     descriptions: Seq[String],
                      urls: Seq[String],
-                     keywords: Seq[String] = Nil,
-                     categories: Seq[String] = Nil,
-                     locations: Seq[String] = Nil,
-                     prices: Seq[com.infomofo.oroku.models.Price] = Nil,
+                     keywords: Seq[String],
+                     categories: Seq[String],
+                     locations: Seq[String],
+                     prices: Seq[com.infomofo.oroku.models.Price],
                      retrievedAt: _root_.org.joda.time.DateTime,
                      site: com.infomofo.oroku.models.Site,
                      openGraphMetadata: scala.Option[com.infomofo.oroku.models.OpenGraphMetadata] = None,
@@ -211,8 +211,8 @@ case class TwitterAppInfo(
  * https://dev.twitter.com/cards/types/app
  */
 case class TwitterAppStoreInfo(
-                                name: scala.Option[com.infomofo.oroku.models.MetaString] = None,
                                 id: com.infomofo.oroku.models.MetaString,
+                                name: scala.Option[com.infomofo.oroku.models.MetaString] = None,
                                 url: scala.Option[com.infomofo.oroku.models.MetaString] = None
                                 )
 
@@ -222,13 +222,14 @@ case class TwitterAppStoreInfo(
  * https://dev.twitter.com/cards/markup.
  */
 case class TwitterCardMetadata(
-                                card: com.infomofo.oroku.models.MetaTwitterCardType,
+                                images: Seq[com.infomofo.oroku.models.MediaObject],
+                                card: scala.Option[com.infomofo.oroku.models.MetaTwitterCardType] = None,
+                                url: scala.Option[com.infomofo.oroku.models.MetaString] = None,
                                 domain: scala.Option[com.infomofo.oroku.models.MetaString] = None,
                                 site: scala.Option[com.infomofo.oroku.models.TwitterUser] = None,
                                 creator: scala.Option[com.infomofo.oroku.models.TwitterUser] = None,
                                 description: scala.Option[com.infomofo.oroku.models.MetaString] = None,
                                 title: scala.Option[com.infomofo.oroku.models.MetaString] = None,
-                                images: Seq[com.infomofo.oroku.models.MediaObject] = Nil,
                                 app: scala.Option[com.infomofo.oroku.models.TwitterAppInfo] = None,
                                 customFields: Seq[com.infomofo.oroku.models.TwitterCustomField] = Nil
                                 )
@@ -237,8 +238,8 @@ case class TwitterCardMetadata(
  * A customizable data field to display on a twitter card
  */
 case class TwitterCustomField(
-                               label: scala.Option[com.infomofo.oroku.models.MetaString] = None,
-                               data: com.infomofo.oroku.models.MetaString
+                               data: com.infomofo.oroku.models.MetaString,
+                               label: scala.Option[com.infomofo.oroku.models.MetaString] = None
                                )
 
 /**
