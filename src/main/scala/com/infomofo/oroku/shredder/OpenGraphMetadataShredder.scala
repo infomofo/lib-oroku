@@ -10,8 +10,9 @@ import scala.util.Try
  * This trait defines the behavior for shredding open graph metadata from meta tags
  */
 private[shredder] trait OpenGraphMetadataShredder extends MetaShredder with LazyLogging {
-  protected def getMetaOpenGraphType(implicit tagName: String, localMetaTags: Elements = metaTags) = {
-    getMeta {
+
+  protected def getMetaOpenGraphType(tagName: String)(implicit attribute: String, namespace: Option[String], localMetaTags: Elements = metaTags) = {
+    getMeta(tagName){
       element =>
         val matchedOgType = models.OpenGraphType(element.attr("content"))
         matchedOgType match {
@@ -28,17 +29,20 @@ private[shredder] trait OpenGraphMetadataShredder extends MetaShredder with Lazy
    */
   lazy val openGraphMetadata = {
     Try {
-      val ogTitle = getMetaString("property=og:title")
-      val ogType = getMetaOpenGraphType("property=og:type")
-      val ogImage = getMetaString("property=og:image")
-      val ogImageMimeType = getMetaString("property=og:image:type")
-      val ogImageWidth = getMetaInt("property=og:image:width")
-      val ogImageHeight = getMetaInt("property=og:image:height")
-      val ogUrl = getMetaString("property=og:url")
-      val ogSiteName = getMetaString("property=og:site_name")
-      val ogDescription = getMetaString("property=og:description")
+      implicit val attribute = "property"
+      implicit var namespace = Some("og")
+      val ogTitle = getMetaString("title")
+      val ogType = getMetaOpenGraphType("type")
+      val ogImage = getMetaString("image")
+      val ogImageMimeType = getMetaString("image:type")
+      val ogImageWidth = getMetaInt("image:width")
+      val ogImageHeight = getMetaInt("image:height")
+      val ogUrl = getMetaString("url")
+      val ogSiteName = getMetaString("site_name")
+      val ogDescription = getMetaString("description")
 
-      val fbAppId = getMetaString("property=fb:app_id")
+      namespace = Some("fb")
+      val fbAppId = getMetaString(tagName ="app_id")
 
       Some(models.OpenGraphMetadata(
         title = ogTitle,

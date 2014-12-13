@@ -16,6 +16,15 @@ trait MetaShredder {
   protected def metaTags: Elements
   protected val usedMetaTags = new mutable.HashSet[Element]()
 
+  private def convertNamespace(namespace: Option[String]): String = {
+    namespace match {
+      case None =>
+        ""
+      case Some(x) =>
+        s"$x:"
+    }
+  }
+
   /**
    * Gets data from a meta tag
    * @param metaTypeConstructor A constructor that transforms a JSoup Element into the expected MetaType
@@ -24,8 +33,8 @@ trait MetaShredder {
    * @tparam MetaType The expected return type
    * @return An option of the expected return type
    */
-  protected def getMeta[MetaType](metaTypeConstructor: (Element) => MetaType)(implicit tagName: String, localMetaTags: Elements) = {
-    val matchingTag = localMetaTags.select(s"meta[$tagName]").iterator().asScala.toList.headOption
+  protected def getMeta[MetaType](tagName: String)(metaTypeConstructor: (Element) => MetaType)(implicit namespace: Option[String], attribute: String, localMetaTags: Elements) = {
+    val matchingTag = localMetaTags.select(s"meta[$attribute=${convertNamespace(namespace)}$tagName]").iterator().asScala.toList.headOption
     matchingTag map {
       element =>
         usedMetaTags += element
@@ -33,15 +42,15 @@ trait MetaShredder {
     }
   }
 
-  protected def getMetaString(implicit tagName: String, localMetaTags: Elements = metaTags): Option[models.MetaString] = {
-    getMeta {
+  protected def getMetaString(tagName: String)(implicit namespace: Option[String], attribute: String, localMetaTags: Elements = metaTags): Option[models.MetaString] = {
+    getMeta (tagName){
       case element =>
         models.MetaString(value = element.attr("content"), tag = element.toString)
     }
   }
 
- protected def getMetaInt(implicit tagName: String, localMetaTags: Elements = metaTags): Option[models.MetaInteger] = {
-    getMeta {
+ protected def getMetaInt(tagName: String)(implicit namespace: Option[String], attribute: String, localMetaTags: Elements = metaTags): Option[models.MetaInteger] = {
+    getMeta (tagName){
       element =>
         models.MetaInteger(value = element.attr("content").toInt, tag = element.toString)
     }
