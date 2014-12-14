@@ -10,7 +10,7 @@ import com.infomofo.oroku.models
 private[shredder] trait TwitterCardMetadataShredder extends OpenGraphMetadataShredder with LazyLogging {
 
   protected def getMetaTwitterCardType(tagName: String)(implicit namespace: Option[String], attribute: String, localMetaTags: Elements = metaTags) = {
-    getMeta(tagName) {
+    getMetaEquals(tagName) {
       element =>
         val matchedType = models.TwitterCardType(element.attr("content"))
         matchedType match {

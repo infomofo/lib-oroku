@@ -11,8 +11,9 @@ import scala.util.Try
  */
 private[shredder] trait OpenGraphMetadataShredder extends MetaShredder with LazyLogging {
 
+
   protected def getMetaOpenGraphType(tagName: String)(implicit attribute: String, namespace: Option[String], localMetaTags: Elements = metaTags) = {
-    getMeta(tagName){
+    getMetaEquals(tagName){
       element =>
         val matchedOgType = models.OpenGraphType(element.attr("content"))
         matchedOgType match {

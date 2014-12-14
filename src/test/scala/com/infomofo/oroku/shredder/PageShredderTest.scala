@@ -36,6 +36,15 @@ class PageShredderTest extends FlatSpec with Matchers {
 
   }
 
+  "A Shredded Page with common search metadata" should "have all the expected data" in {
+    val source = Source.fromURL(getClass.getResource("/samplesearchmetapage.html"))
+    val sourceString = source.getLines().mkString("")
+    val shreddedPage = PageShredder(sourceString)
+    shreddedPage.pageInfo.appleItunesMetadata should be (None)
+    shreddedPage.pageInfo.twitterCardMetadata.get.title should be (shreddedPage.pageInfo.openGraphMetadata.get.title)
+
+  }
+
   "An actual live page" should "have all the expected data" in {
     val shreddedPage = PageShredder(new URL("http://ogp.me/"))
     shreddedPage.pageInfo.appleItunesMetadata should be (None)

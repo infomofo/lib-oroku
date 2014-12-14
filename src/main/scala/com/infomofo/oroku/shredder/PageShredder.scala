@@ -80,10 +80,12 @@ object PageShredder {
 class PageShredder(document: Document, url: Option[URL] = None)
   extends OpenGraphMetadataShredder
   with TwitterCardMetadataShredder
+  with SearchMetadataShredder
   with LazyLogging {
 
   private lazy val headElement = document.head
   protected override lazy val metaTags = headElement.select("meta")
+  protected override lazy val headTags = headElement.select(":not(meta):not(script):not(link):not(head)")
 
   /**
    * a sequence of structured info objects shredded from this page, in order of their priority
@@ -91,8 +93,9 @@ class PageShredder(document: Document, url: Option[URL] = None)
   private lazy val structuredInfos: Seq[StructuredInformation] = {
     val structuredOpenGraphMetadata = openGraphMetadata.toSeq.map(StructuredInformation(_))
     val structuredTwitterData = twitterCardMetadata.toSeq.map(StructuredInformation(_))
+    val structuredSearchData = searchMetadata.toSeq.map(StructuredInformation(_))
 
-    structuredOpenGraphMetadata ++ structuredTwitterData
+    structuredOpenGraphMetadata ++ structuredTwitterData ++ structuredSearchData
   }
 
   /**
@@ -114,12 +117,17 @@ class PageShredder(document: Document, url: Option[URL] = None)
         siteType = structuredInfos.flatMap(_.siteTypes).headOption
       ),
       openGraphMetadata = openGraphMetadata,
-      twitterCardMetadata = twitterCardMetadata
+      twitterCardMetadata = twitterCardMetadata,
+      searchMetadata = searchMetadata
     )
 
     val unhandledMetaTags = metaTags.iterator.asScala.filterNot(usedMetaTags.contains)
     if (unhandledMetaTags.nonEmpty) {
       logger.warn(s" Unhandled meta tags ${unhandledMetaTags.mkString(", ")}")
+    }
+    val unhandledHeadTags = headTags.iterator.asScala.filterNot(usedHeadTags.contains)
+    if (unhandledHeadTags.nonEmpty) {
+      logger.warn(s" Unhandled head tags ${unhandledHeadTags.mkString(", ")}")
     }
     returnValue
   }
