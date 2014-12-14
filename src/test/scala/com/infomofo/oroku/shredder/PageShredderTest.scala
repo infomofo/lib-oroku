@@ -43,6 +43,8 @@ class PageShredderTest extends FlatSpec with Matchers {
     shreddedPage.pageInfo.appleItunesMetadata should be (None)
     shreddedPage.pageInfo.searchMetadata.get.title.get.value should be ("Example Books - high-quality used books for children")
     shreddedPage.pageInfo.titles.contains(shreddedPage.pageInfo.searchMetadata.get.title.get.value) should be (true)
+    shreddedPage.pageInfo.searchMetadata.get.description.get.value should be ("Author: A.N. Author, Illustrator: P. Picture, Category: Books, Price:  £9.24, Length: 784 pages")
+    shreddedPage.pageInfo.descriptions.contains(shreddedPage.pageInfo.searchMetadata.get.description.get.value) should be (true)
   }
 
   "A Shredded Page with apple itunes metadata" should "have all the expected data" in {
