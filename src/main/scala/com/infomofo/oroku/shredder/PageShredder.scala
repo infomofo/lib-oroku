@@ -81,6 +81,7 @@ class PageShredder(document: Document, url: Option[URL] = None)
   extends OpenGraphMetadataShredder
   with TwitterCardMetadataShredder
   with SearchMetadataShredder
+  with AppleItunesMetadataShredder
   with LazyLogging {
 
   private lazy val headElement = document.head
@@ -117,7 +118,9 @@ class PageShredder(document: Document, url: Option[URL] = None)
         siteType = structuredInfos.flatMap(_.siteTypes).headOption
       ),
       openGraphMetadata = openGraphMetadata,
+      appleItunesMetadata = appleItunesMetadata,
       twitterCardMetadata = twitterCardMetadata,
+      schemaOrgItems = Nil,
       searchMetadata = searchMetadata
     )
 

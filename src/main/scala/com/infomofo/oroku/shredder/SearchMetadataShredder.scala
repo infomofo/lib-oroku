@@ -54,7 +54,7 @@ private[shredder] trait SearchMetadataShredder extends MetaShredder with HeadShr
       ))
     }.recover {
       case e =>
-        logger.warn("Could not find expected metadata for open graph", e)
+        logger.warn("Could not find expected metadata for traditional search metadata", e)
         None
     }.get
   }

@@ -41,8 +41,18 @@ class PageShredderTest extends FlatSpec with Matchers {
     val sourceString = source.getLines().mkString("")
     val shreddedPage = PageShredder(sourceString)
     shreddedPage.pageInfo.appleItunesMetadata should be (None)
-    shreddedPage.pageInfo.twitterCardMetadata.get.title should be (shreddedPage.pageInfo.openGraphMetadata.get.title)
+    shreddedPage.pageInfo.searchMetadata.get.title.get.value should be ("Example Books - high-quality used books for children")
+    shreddedPage.pageInfo.titles.contains(shreddedPage.pageInfo.searchMetadata.get.title.get.value) should be (true)
+  }
 
+  "A Shredded Page with apple itunes metadata" should "have all the expected data" in {
+    val source = Source.fromURL(getClass.getResource("/sampleitunesmetadatapage.html"))
+    val sourceString = source.getLines().mkString("")
+    val shreddedPage = PageShredder(sourceString)
+    shreddedPage.pageInfo.appleItunesMetadata.isDefined should be (true)
+    shreddedPage.pageInfo.appleItunesMetadata.get.appId.value should be (1234)
+    shreddedPage.pageInfo.appleItunesMetadata.get.affiliateData.isDefined should be (true)
+    shreddedPage.pageInfo.appleItunesMetadata.get.appArgument.isDefined should be (true)
   }
 
   "An actual live page" should "have all the expected data" in {

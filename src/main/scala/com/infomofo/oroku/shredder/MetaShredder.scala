@@ -42,7 +42,7 @@ trait MetaShredder {
    * @tparam MetaType The expected return type
    * @return An option of the expected return type
    */
-  protected def getMetaEquals[MetaType](tagName: String)(metaTypeConstructor: (Element) => MetaType)(implicit namespace: Option[String], attribute: String, localMetaTags: Elements) = {
+  protected def getMetaEquals[MetaType](tagName: String)(metaTypeConstructor: (Element) => MetaType)(implicit namespace: Option[String] = None, attribute: String = "name", localMetaTags: Elements = metaTags) = {
     getMeta(s"$attribute=${convertNamespace(namespace)}$tagName")(metaTypeConstructor)
   }
 

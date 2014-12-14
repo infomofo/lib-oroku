@@ -126,7 +126,7 @@ private[shredder] trait TwitterCardMetadataShredder extends OpenGraphMetadataShr
       ))
     }.recover {
       case e =>
-        logger.warn("Could not find expected metadata for open graph", e)
+        logger.warn("Could not find expected metadata for twitter card", e)
         None
     }.get
   }
