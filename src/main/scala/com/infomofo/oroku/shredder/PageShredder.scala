@@ -82,9 +82,11 @@ class PageShredder(document: Document, url: Option[URL] = None)
   with TwitterCardMetadataShredder
   with SearchMetadataShredder
   with AppleItunesMetadataShredder
+  with SchemaOrgMetadataShredder
   with LazyLogging {
 
   private lazy val headElement = document.head
+  protected override lazy val bodyElement = document.body()
   protected override lazy val metaTags = headElement.select("meta")
   protected override lazy val headTags = headElement.select(":not(meta):not(script):not(link):not(head)")
 
@@ -95,8 +97,9 @@ class PageShredder(document: Document, url: Option[URL] = None)
     val structuredOpenGraphMetadata = openGraphMetadata.toSeq.map(StructuredInformation(_))
     val structuredTwitterData = twitterCardMetadata.toSeq.map(StructuredInformation(_))
     val structuredSearchData = searchMetadata.toSeq.map(StructuredInformation(_))
+    val structuredSchemaOrgMetadata = Some(StructuredInformation(schemaOrgItems))
 
-    structuredOpenGraphMetadata ++ structuredTwitterData ++ structuredSearchData
+    structuredOpenGraphMetadata ++ structuredTwitterData ++ structuredSearchData ++ structuredSchemaOrgMetadata
   }
 
   /**
@@ -120,7 +123,7 @@ class PageShredder(document: Document, url: Option[URL] = None)
       openGraphMetadata = openGraphMetadata,
       appleItunesMetadata = appleItunesMetadata,
       twitterCardMetadata = twitterCardMetadata,
-      schemaOrgItems = Nil,
+      schemaOrgItems = schemaOrgItems,
       searchMetadata = searchMetadata
     )
 

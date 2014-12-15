@@ -57,6 +57,13 @@ class PageShredderTest extends FlatSpec with Matchers {
     shreddedPage.pageInfo.appleItunesMetadata.get.appArgument.isDefined should be (true)
   }
 
+  "A Shredded Page with schema org metadata" should "have all the expected data" in {
+    val source = Source.fromURL(getClass.getResource("/sampleschemaorgpage.html"))
+    val sourceString = source.getLines().mkString("")
+    val shreddedPage = PageShredder(sourceString)
+    shreddedPage.pageInfo.schemaOrgItems.isEmpty should be (false)
+  }
+
   "An actual live page" should "have all the expected data" in {
     val shreddedPage = PageShredder(new URL("http://ogp.me/"))
     shreddedPage.pageInfo.appleItunesMetadata should be (None)

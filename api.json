@@ -587,43 +587,43 @@
 			"fields": [
 				{
 					"name": "item_type",
-					"type": "string",
+					"type": "meta_string",
 					"description": "You can specify the type of item using the itemtype attribute immediately after the itemscope.  The full hierarchy of types is available at http://schema.org/docs/full.html.",
 					"required": false
 				},
 				{
 					"name": "name",
-					"type": "string",
+					"type": "meta_string",
 					"description": "The name of the item. See http://schema.org/name",
 					"required": false
 				},
 				{
 					"name": "alternate_name",
-					"type": "string",
+					"type": "meta_string",
 					"description": "An alias for the item",
 					"required": false
 				},
 				{
 					"name": "description",
-					"type": "string",
+					"type": "meta_string",
 					"description": "A short description of the item.",
 					"required": false
 				},
 				{
 					"name": "image",
-					"type": "string",
+					"type": "meta_string",
 					"description": "An image of the item.",
 					"required": false
 				},
 				{
 					"name": "url",
-					"type": "string",
+					"type": "meta_string",
 					"description": "URL of the item.",
 					"required": false
 				},
 				{
 					"name": "same_as",
-					"type": "string",
+					"type": "meta_string",
 					"description": "URL of a reference Web page that unambiguously indicates the item's identity. E.g. the URL of the item's Wikipedia page, Freebase page, or official website.",
 					"required": false
 				},
@@ -635,44 +635,44 @@
 				},
 				{
 					"name": "color",
-					"type": "string",
+					"type": "meta_string",
 					"description": "The color of the product.",
 					"required": false
 				},
 				{
 					"name": "productId",
-					"type": "string",
+					"type": "meta_string",
 					"description": "The product identifier, such as ISBN.",
 					"example": "isbn:123-456-789",
 					"required": false
 				},
 				{
 					"name": "sku",
-					"type": "string",
+					"type": "meta_string",
 					"description": "The Stock Keeping Unit (SKU), i.e. a merchant-specific identifier for a product or service, or the product to which the offer refers.", 
 					"required": false
 				},
 				{
 					"name": "model",
-					"type": "string",
+					"type": "meta_string",
 					"description": "The model of the product. Use with the URL of a ProductModel or a textual representation of the model identifier. The URL of the ProductModel can be from an external source. It is recommended to additionally provide strong product identifiers via the gtin8/gtin13/gtin14 and mpn properties.",
 					"required": false
 				},
 				{
 					"name": "gtin8",
-					"type": "string",
+					"type": "meta_string",
 					"description": "The GTIN-8 code of the product, or the product to which the offer refers. This code is also known as EAN/UCC-8 or 8-digit EAN. See GS1 GTIN Summary for more details.", 
 					"required": false
 				},
 				{
 					"name": "gtin13",
-					"type": "string",
+					"type": "meta_string",
 					"description": "The GTIN-13 code of the product, or the product to which the offer refers.",
 					"required": false
 				},
 				{
 					"name": "gtin14",
-					"type": "string",
+					"type": "meta_string",
 					"description": "The GTIN-14 code of the product, or the product to which the offer refers.",
 					"required": false
 				}

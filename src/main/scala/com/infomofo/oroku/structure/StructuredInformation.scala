@@ -63,7 +63,6 @@ object StructuredInformation {
 
   def apply(meta: models.TwitterCardMetadata) = StructuredTwitterCardMetadata(meta)
 
-
   implicit class StructuredSearchMetadata(val self: models.SearchMetadata)
     extends StructuredInformation {
 
@@ -85,5 +84,27 @@ object StructuredInformation {
   }
 
   def apply(meta: models.SearchMetadata) = StructuredSearchMetadata(meta)
+
+  implicit class StructuredSchemaOrgMetadata(val self: Seq[models.SchemaOrgItem])
+    extends StructuredInformation {
+
+    override def titles: Seq[String] = self.flatMap(_.name.map(_.value)) ++ self.flatMap(_.alternateName.map(_.value))
+
+    override def urls: Seq[String] = Nil
+
+    override def locations: Seq[String] = Nil
+
+    override def keywords: Seq[String] = Nil
+
+    override def descriptions: Seq[String] = self.flatMap(_.description.map(_.value))
+
+    override def siteNames: Seq[String] = Nil
+
+    override def siteTypes: Seq[String] = Nil
+
+    override def images: Seq[String] = self.flatMap(_.image.map(_.value))
+  }
+
+  def apply(meta: Seq[models.SchemaOrgItem]) = StructuredSchemaOrgMetadata(meta)
 }
 
