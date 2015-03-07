@@ -1,962 +1,993 @@
 {
-	"name": "oroku",
-	"base_url": "",
-	"description": "an api for parsing useful information on webpages",
-	"enums": {
-		"open_graph_type": {
-			"description": "The type of your object according to the open graph protocol.  When the community agrees on the schema for a type, it is added to the list of global types. All other objects in the type system are CURIEs of the form.",
-			"values": [
-				{
-			      "name": "article"
-			    },
-				{
-			      "name": "book"
-			    },
-				{
-			      "name": "profile"
-			    },
-				{
-			      "name": "website"
-			    }
-			]
-		},
-		"twitter_card_type": {
-			"description": "The card type specified for this page that will affect how a link to this page will be rendered if posted on twitter. See: https://dev.twitter.com/cards/types.",
-			"values": [
-				{
-			      "name": "summary",
-			      "description": "Default Card, including a title, description, thumbnail, and Twitter account attribution. See https://dev.twitter.com/cards/types/summary."
-			    },
-				{
-			      "name": "summary_large_image",
-			      "description": "Similar to a Summary Card, but with a prominently featured image. See https://dev.twitter.com/cards/types/summary-large-image"
-			    },
-				{
-			      "name": "photo",
-			      "description": "A Card with a photo only. See https://dev.twitter.com/cards/types/photo."
-			    },
-				{
-			      "name": "gallery",
-			      "description": "A Card highlighting a collection of four photos. See https://dev.twitter.com/cards/types/gallery"
-			    },
-				{
-			      "name": "app",
-			      "description": "A Card to detail a mobile app with direct download.  See https://dev.twitter.com/cards/types/app"
-			    },
-				{
-			      "name": "player",
-			      "description": "A Card to provide video/audio/media. See https://dev.twitter.com/cards/types/player"
-			    },
-				{
-			      "name": "product",
-			      "description": "A Card optimized for product information. See https://dev.twitter.com/cards/types/product."
-			    }
-			]
-		}
-	},
-	"models": {
-		"meta_twitter_card_type": {
-			"description": "An html head meta tag that has been parsed for twitter_card_type content.",
-			"fields": [
-				{
-					"name": "value",
-					"type": "twitter_card_type",
-					"description": "The twitter_card_type value of this meta tag.",
-					"required": true
-				},
-				{
-					"name": "tag",
-					"type": "string",
-					"description": "The raw html meta tag that this value was derived from.",
-					"required": true
-				}
-			]
-		},
-		"meta_open_graph_type": {
-			"description": "An html head meta tag that has been parsed for open_graph_type content.",
-			"fields": [
-				{
-					"name": "value",
-					"type": "open_graph_type",
-					"description": "The open_graph_type value of this meta tag.",
-					"required": true
-				},
-				{
-					"name": "tag",
-					"type": "string",
-					"description": "The raw html meta tag that this value was derived from.",
-					"required": true
-				}
-			]
-		},
-		"meta_string": {
-			"description": "An html head meta tag that has been parsed for string content.",
-			"fields": [
-				{
-					"name": "value",
-					"type": "string",
-					"description": "The string value of this meta tag.",
-					"required": true
-				},
-				{
-					"name": "tag",
-					"type": "string",
-					"description": "The raw html meta tag that this value was derived from.",
-					"required": true
-				}
-			]
-		},
-		"meta_decimal": {
-		  "description": "An html head meta tag that has been parsed for decimal content.",
-		  "fields": [
-			{
-			  "name": "value",
-			  "type": "decimal",
-			  "description": "The decimal value of this meta tag.",
-			  "required": true
-			},
-			{
-			  "name": "tag",
-			  "type": "string",
-			  "description": "The raw html meta tag that this value was derived from.",
-			  "required": true
-			}
-		  ]
-		},
-		"meta_integer": {
-			"description": "An html head meta tag that has been parsed for integer content.",
-			"fields": [
-				{
-					"name": "value",
-					"type": "integer",
-					"description": "The integer value of this meta tag.",
-					"required": true
-				},
-				{
-					"name": "tag",
-					"type": "string",
-					"description": "The raw html meta tag that this value was derived from.",
-					"required": true
-				}
-			]
-		},
-		"meta_boolean": {
-			"description": "An html head meta tag that has been parsed for boolean content.",
-			"fields": [
-				{
-					"name": "value",
-					"type": "boolean",
-					"description": "The boolean value of this meta tag.",
-					"required": true
-				},
-				{
-					"name": "tag",
-					"type": "string",
-					"description": "The raw html meta tag that this value was derived from.",
-					"required": true
-				}
-			]
-		},
-		"meta_date_time_iso8601": {
-			"description": "An html head meta tag that has been parsed for date time content.",
-			"fields": [
-				{
-					"name": "value",
-					"type": "date-time-iso8601",
-					"description": "The date-time value of this meta tag.",
-					"required": true
-				},
-				{
-					"name": "tag",
-					"type": "string",
-					"description": "The raw html meta tag that this value was derived from.",
-					"required": true
-				}
-			]
-		},
-		"price": {
-		  	"description": "A price for a product on this page",
-			"fields": [
-			  {
-				"name": "amount",
-				"type": "meta_decimal",
-				"description": "The amount of this price.",
-				"required": true,
-				"example": "1.99"
-			  },
-			  {
-				"name": "currency",
-				"type": "meta_string",
-				"description": "The currency that this product is presented in ISO-4217 currency code https://en.wikipedia.org/wiki/ISO_4217#Active_codes",
-				"required": false,
-				"example": "USD"
-			  }
-			]
-		},
-		"twitter_user": {
-			"description": "User info declared for parsing into a twitter card.  See: https://dev.twitter.com/cards/markup",
-			"fields": [
-				{
-					"name": "username",
-					"type": "meta_string",
-					"description": "username of site or creator",
-					"required": false,
-					"example": "@nytimes"
-				},
-				{
-					"name": "id",
-					"type": "meta_integer",
-					"description": "Same as username, but the user's Twitter ID",
-					"required": false
-				}
-			]
-		},
-		"twitter_custom_field": {
-			"description": "A customizable data field to display on a twitter card",
-			"fields": [
-			  	{
-					"name": "data",
-					"description": "Top customizable data field, can be a relatively short string",
-					"type": "meta_string",
-					"required": true,
-					"example": "$3.99"
-			  	},
-				{
-					"name": "label",
-					"description": "Customizable label or units for the information in twitter:data1 (best practice: use all caps)",
-					"type": "meta_string",
-					"required": false,
-					"example": "PRICE"
-				}
-			]
-		},
-		"twitter_app_store_info": {
-			"description": "Information linking twitter card data to an app store. See https://dev.twitter.com/cards/types/app",
-			"fields": [
-			  	{
-					"name": "id",
-					"description": "Should be the represenation of your app id in its respective store",
-					"type": "meta_string",
-					"required": true,
-					"example": "307234931"
-			  	},
-				{
-					"name": "name",
-					"description": "Name of your app",
-					"type": "meta_string",
-					"required": false,
-					"example": "Cannonball"
-				},
-				{
-					"name": "url",
-					"description": "Your app's custom URL scheme (you must include :// after your scheme name)",
-					"type": "meta_string",
-					"required": false,
-					"example": "cannonball://poem/5149e249222f9e600a7540ef"
-				}
-			]
-		},
-		"twitter_app_info": {
-			"description": "A twitter card to detail a mobile app with direct download.",
-			"fields": [
-				{
-					"name": "country",
-					"description": "If your application is not available in the US App Store, you must set this value to the two-letter country code for the App Store that contains your application.",
-					"type": "meta_string",
-					"required": false,
-					"example": "US"
-				},
-				{
-					"name": "iphone",
-					"description": "iPhone app store information",
-					"type": "twitter_app_store_info",
-					"required": false
-				},
-				{
-					"name": "ipad",
-					"description": "iPad app store information",
-					"type": "twitter_app_store_info",
-					"required": false
-				},
-				{
-					"name": "googleplay",
-					"description": "Google Play store information",
-					"type": "twitter_app_store_info",
-					"required": false
-				}
-			]
-		},
-		"apple_itunes_metadata": {
-			"description": "Information provided to show a smart app banner to direct the user to an equivalent app store listing when viewing this webpage on iOS.  See https://developer.apple.com/library/ios/documentation/AppleApplications/Reference/SafariWebContent/PromotingAppswithAppBanners/PromotingAppswithAppBanners.html",
-			"fields": [
-				{
-					"name": "app_id",
-					"type": "meta_integer",
-					"description": "Your app's unique identifier. To find your app ID from the iTunes Link Maker, type the name of your app in the Search field, and select the appropriate country and media type. In the results, find your app and select iPhone App Link in the column on the right. Your app ID is the nine-digit number in between id and ?mt.",
-					"required": true,
-					"example": "000000000"
-				},
-				{
-					"name": "affiliate_data",
-					"type": "meta_string",
-					"description": "Your iTunes affiliate string, if you are an iTunes affiliate. If you are not, find out more about becoming an iTunes affiliate at http://www.apple.com/itunes/affiliates/.",
-					"required": false
-				},
-				{
-					"name": "app_argument",
-					"type": "meta_string",
-					"description": "A URL that provides context to your native app. If you include this, and the user has your app installed, she can jump from your website to the corresponding position in your iOS app.",
-					"required": false
-				}
-			]
-		},
-		"media_object": {
-			"description": "A media type specified by open graph. The og:image, og:audio, and og:video property has some optional structured properties.",
-			"fields": [
-				{
-					"name": "url",
-					"type": "meta_string",
-					"description": "An image URL which should represent your object within the graph",
-					"required": true,
-					"example": "http://example.com/ogp.jpg"
-				},
-				{
-					"name": "secure_url",
-					"type": "meta_string",
-					"description": "An alternate url to use if the webpage requires HTTPS.",
-					"required": false,
-					"example": "https://secure.example.com/ogp.jpg"
-				},
-				{
-					"name": "mime_type",
-					"type": "meta_string",
-					"description": "A MIME type for this media",
-					"required": false,
-					"example": "image/jpeg"
-				},
-				{
-					"name": "width",
-					"type": "meta_integer",
-					"description": "The number of pixels wide. Does not apply to audio.",
-					"required": false,
-					"example": "400"
-				},
-				{
-					"name": "height",
-					"type": "meta_integer",
-					"description": "The number of pixels high.  Does not apply to audio.",
-					"required": false,
-					"example": "400"
-				}
-			]
-		},
-		"open_graph_metadata": {
-			"description": "Information about the site presented in opengraph format (see ogp.me)",
-			"fields": [
-				{
-					"name": "title",
-					"type": "meta_string",
-					"description": "The title of your object as it should appear within the graph.",
-					"example": "The Rock",
-					"required": false
-				},
-				{
-					"name": "open_graph_type",
-					"type": "meta_open_graph_type",
-					"description": "The type of your object. Depending on the type specified, other optional properties may be present.",
-					"example": "video.movie",
-					"required": false
-				},
-				{
-					"name": "image",
-					"type": "media_object",
-					"description": "An image URL which should represent your object within the graph",
-					"required": false,
-					"example": "http://ia.media-imdb.com/images/rock.jpg"
-				},
-				{
-					"name": "url",
-					"type": "meta_string",
-					"description": "The canonical UJRL of your object that will be used as its permanent ID in the graph",
-					"example": "http://www.imdb.com/title/tt0117500/",
-					"required": false
-				},
-				{
-					"name": "description",
-					"type": "meta_string",
-					"description": "A one to two sentence description of your object.",
-					"required": false,
-					"example:": "Sean Connery found fame and fortune as the suave, sophisticated British agent, James Bond."
-				},
-				{
-					"name": "determiner",
-					"type": "meta_string",
-					"description": "The word that appears before this object's title in a sentence. An enum of (a, an, the, \"\", auto). If auto is chosen, the consumer of your data should chose between \"a\" or \"an\".",
-					"example": "an",
-					"required": false
-				},
-				{
-					"name": "locale",
-					"type": "meta_string",
-					"description": "The locale these tags are marked up in. Of the format language_TERRITORY.",
-					"example": "en_US",
-					"required": "false"
-				},
-				{
-					"name": "locale_alternative",
-					"type": "[meta_string]",
-					"description": "An array of other locales this page is available in.",
-					"required": false
-				},
-				{
-					"name": "site_name",
-					"type": "meta_string",
-					"description": "If your object is part of a larger web site, the name which should be displayed for the overall site. ",
-					"example": "IMDb",
-					"required": false
-				},
-				{
-					"name": "video",
-					"type": "media_object",
-					"description": "A URL to a video file that complements this object.",
-					"required": false
-				},
-				{
-					"name": "audio",
-					"type": "media_object",
-					"description": "A URL to a audio file that complements this object.",
-					"required": false
-				},
-				{
-					"name": "updated_time",
-					"type": "meta_date_time_iso8601",
-					"description": "The date time that this website was last updated.",
-					"required": false
-				},
-				{
-					"name": "see_also",
-					"type": "meta_string",
-					"description": "A URL associated with this page",
-					"required": false
-				},
-				{
-					"name": "app_id",
-					"type": "meta_string",
-					"description": "A facebook app id associated with this page.",
-					"required": false
-				},
-				{
-					"name": "profile_id",
-					"type": "meta_string",
-					"description": "A facebook profile id associated with this page.",
-					"required": false
-				},
-				{
-				  "name": "sale_price",
-				  "type": "price",
-				  "description": "",
-				  "required": false
-				},
-				{
-				  "name": "price",
-				  "type": "price",
-				  "description": "",
-				  "required": false
-				},
-				{
-				  "name": "original_price",
-				  "type": "price",
-				  "description": "",
-				  "required": false
-				}
-			]
-		},
-		"site": {
-			"description": "information about the domain that this site is hosted on.",
-			"fields": [
-				{
-					"name": "name",
-					"type": "string",
-					"description": "the name of the site",
-					"example": "IMDb"
-				},
-				{
-					"name": "site_type",
-					"type": "string",
-					"description": "the type of site",
-					"default": "website"
-				},
-				{
-					"name": "domain",
-					"type": "string",
-					"description": "The domain that this content is hosted on originally",
-					"example": "iheart.com",
-					"required": false
-				}
-			]
-		},
-		"search_metadata": {
-			"description": "Meta tags provide search engines with information about their sites. Meta tags can be used to provide information to all sorts of clients, and each system processes only the meta tags they understand and ignores the rest.  See https://support.google.com/webmasters/answer/79812?hl=en.",
-			"fields": [
-				{
-					"name": "description",
-					"type": "meta_string",
-					"description": "This tag provides a short description of the page. In some situations this description is used as a part of the snippet shown in the search results.",
-					"required": false,
-					"example": ""
-				},
-				{
-					"name": "title",
-					"type": "meta_string",
-					"description": "The contents of this tag are generally shown as the title in search results.",
-					"required": false
-				},
-				{
-					"name": "robots",
-					"type": "[meta_string]",
-					"description": "These meta tags can control the behavior of search engine crawling and indexing. The robots meta tag applies to all search engines, while the \"googlebot\" meta tag is specific to Google. The default values are \"index, follow\" (the same as \"all\") and do not need to be specified.  See also https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag?csw=1.",
-					"example": "index, follow",
-					"required": false
-				},
-				{
-					"name": "googlebot",
-					"type": "[meta_string]",
-					"description": "These meta tags can control the behavior of search engine crawling and indexing. The robots meta tag applies to all search engines, while the \"googlebot\" meta tag is specific to Google. The default values are \"index, follow\" (the same as \"all\") and do not need to be specified.  See also https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag?csw=1.",
-					"example": "index, follow",
-					"required": false
-				},
-				{
-					"name": "google_site_link_search_box",
-					"type": "meta_boolean",
-					"description": "This meta tag tells Google not to show the sitelinks search box. See also https://developers.google.com/webmasters/richsnippets/sitelinkssearch.",
-					"required": false
-				},
-				{
-					"name": "google_notranslate",
-					"type": "meta_boolean",
-					"description": "This meta tag tells Google that you don't want us to provide a translation for this page.",
-					"required": false
-				},
-				{
-					"name": "google_site_verification",
-					"type": "[meta_string]",
-					"description": "You can use this tag on the top-level page of your site to verify ownership for Webmaster Tools. See also https://support.google.com/webmasters/answer/35659.",
-					"required": false
-				},
-				{
-					"name": "charset",
-					"type": "meta_string",
-					"description": "This attribute declares the character encoding used on the page.",
-					"required": false,
-					"example": "utf-8"
-				},
-				{
-					"name": "content_type",
-					"type": "meta_string",
-					"description": "iThis defines the page's content type.  See also: https://developers.google.com/webmasters/state-of-the-web/2005/metadata?csw=1",
-					"required": false,
-					"example": "text/html"
-				},
-				{
-					"name": "keywords",
-					"type": "[meta_string]",
-					"description": "A set of keywords associated with this website. Note that these have been confirmed to NOT be used by Google in their search engine ranking algorithm (http://googlewebmastercentral.blogspot.com/2009/09/google-does-not-use-keywords-meta-tag.html). However other sites, most notably China's Baidu do use them (http://searchengineland.com/the-b2b-marketers-guide-to-baidu-seo-180658), so it is still a good practice to use these if you expect a large amount of traffic from China.",
-					"required": false
-				}
-			]
-		},
-		"brand_object": {
-			"description": "A brand is a name used by an organization or business person for labeling a product, product group, or similar.",
-			"fields": [
-				{
-					"name": "logo",
-					"type": "string",
-					"description": "A logo associated with an organization",
-					"required": false
-				},
-				{
-					"name": "name",
-					"type": "string",
-					"description": "The name of the brand",
-					"required": false
-				}
-			]
-		},
-		"schema_org_item": {
-			"description": "The representation of an item according to schema.org. schema.org is a collaboration by Google, Microsoft, and Yahoo! to improve the web by creating a structured data markup schema supported by major search engines. Multiple item scopes can be included on one page.  Only the most common properties are currently parsed. See: http://schema.org/docs/gs.html.",
-			"fields": [
-				{
-					"name": "item_type",
-					"type": "meta_string",
-					"description": "You can specify the type of item using the itemtype attribute immediately after the itemscope.  The full hierarchy of types is available at http://schema.org/docs/full.html.",
-					"required": false
-				},
-				{
-					"name": "name",
-					"type": "meta_string",
-					"description": "The name of the item. See http://schema.org/name",
-					"required": false
-				},
-				{
-					"name": "alternate_name",
-					"type": "meta_string",
-					"description": "An alias for the item",
-					"required": false
-				},
-				{
-					"name": "description",
-					"type": "meta_string",
-					"description": "A short description of the item.",
-					"required": false
-				},
-				{
-					"name": "image",
-					"type": "meta_string",
-					"description": "An image of the item.",
-					"required": false
-				},
-				{
-					"name": "url",
-					"type": "meta_string",
-					"description": "URL of the item.",
-					"required": false
-				},
-				{
-					"name": "same_as",
-					"type": "meta_string",
-					"description": "URL of a reference Web page that unambiguously indicates the item's identity. E.g. the URL of the item's Wikipedia page, Freebase page, or official website.",
-					"required": false
-				},
-				{
-					"name": "brand",
-					"type": "brand_object",
-					"description": "A brand is a name used by an organization or business person for labeling a product, product group, or similar.",
-					"required": false
-				},
-				{
-					"name": "color",
-					"type": "meta_string",
-					"description": "The color of the product.",
-					"required": false
-				},
-				{
-					"name": "productId",
-					"type": "meta_string",
-					"description": "The product identifier, such as ISBN.",
-					"example": "isbn:123-456-789",
-					"required": false
-				},
-				{
-					"name": "sku",
-					"type": "meta_string",
-					"description": "The Stock Keeping Unit (SKU), i.e. a merchant-specific identifier for a product or service, or the product to which the offer refers.", 
-					"required": false
-				},
-				{
-					"name": "model",
-					"type": "meta_string",
-					"description": "The model of the product. Use with the URL of a ProductModel or a textual representation of the model identifier. The URL of the ProductModel can be from an external source. It is recommended to additionally provide strong product identifiers via the gtin8/gtin13/gtin14 and mpn properties.",
-					"required": false
-				},
-				{
-					"name": "gtin8",
-					"type": "meta_string",
-					"description": "The GTIN-8 code of the product, or the product to which the offer refers. This code is also known as EAN/UCC-8 or 8-digit EAN. See GS1 GTIN Summary for more details.", 
-					"required": false
-				},
-				{
-					"name": "gtin13",
-					"type": "meta_string",
-					"description": "The GTIN-13 code of the product, or the product to which the offer refers.",
-					"required": false
-				},
-				{
-					"name": "gtin14",
-					"type": "meta_string",
-					"description": "The GTIN-14 code of the product, or the product to which the offer refers.",
-					"required": false
-				}
-			]
-		},
-		"twitter_card_metadata": {
-			"description": "Additinal information provided by a webpage to control how a link to that page is rendered when posted on twitter. See also: https://dev.twitter.com/cards/markup.",
-			"fields": [
-				{
-				  	"name": "images",
-				  	"type": "[media_object]",
-				  	"description": "Primary image to use in the card.",
-				  	"required": true
-				},
-				{
-				  "name": "card",
-				  "type": "meta_twitter_card_type",
-				  "description": "the card type",
-				  "example": "summary",
-				  "required": false
-				},
-				{
-				  	"name": "url",
-					"type": "meta_string",
-					"description": "the pages canonical url",
-					"example": "https://www.twitter.com",
-					"required": false
-				},
-				{
-					"name": "domain",
-					"type": "meta_string",
-					"description": "The domain that this content is hosted on originally",
-					"example": "iheart.com",
-					"required": false
-				},
-				{
-					"name": "site",
-					"type": "twitter_user",
-					"description": "the twitter user associated with this website",
-					"required": false
-				},
-				{
-					"name": "creator",
-					"type": "twitter_user",
-					"description": "the twitter user associated with the content creator",
-					"required": false
-				},
-				{
-					"name": "description",
-					"type": "meta_string",
-					"description": "Description of content (maximum 200 characters)",
-					"required": false
-				},
-				{
-					"name": "title",
-					"type": "meta_string",
-					"description": "Title of content (max 70 characters)",
-					"example": "Mountain sunset",
-					"required": false
-				},
-				{
-					"name": "app",
-					"type": "twitter_app_info",
-					"description": "Information linking this page to app stores",
-					"required": false
-				},
-				{
-					"name": "custom_fields",
-					"type": "[twitter_custom_field]",
-					"description": "Custom fields displayed on a twitter card",
-					"required": false
-				}
-			]
-		},
-		"page_info": {
-			"description": "The basic information on this webpage, according to major metadata tagging standards and conventions, as well as information derived from the content of the page itself.",
-			"plural": "page_info",
-			"fields": [
-				{
-					"name": "titles",
-					"type": "[string]",
-					"description": "titles found on the page- sorted in order of how relevant they are",
-					"required": true
-				},
-				{
-					"name": "images",
-					"type": "[string]",
-					"description": "images found on the page- sorted in order of how relevant they are",
-					"required": true
-				},
-				{
-					"name": "descriptions",
-					"type": "[string]",
-					"description": "descriptions found on the page- sorted in order of how relevant they are",
-					"required": true
-				},
-				{
-					"name": "urls",
-					"type": "[string]",
-					"description": "urls found for the page- the canonical url if available",
-					"required": true
-				},
-				{
-					"name": "keywords",
-					"type": "[string]",
-					"description": "keywords found on the page",
-					"required": true
-				},
-				{
-					"name": "categories",
-					"type": "[string]",
-					"description": "the category of the product on the page",
-					"required": true
-				},
-				{
-					"name": "locations",
-					"type": "[string]",
-					"description": "locations found on the page",
-					"required":  true
-				},
-				{
-				  	"name": "prices",
-				  	"type": "[price]",
-				  	"description": "prices found on the page",
-				  	"required": true
-				},
-				{
-					"name": "retrieved_at",
-					"type": "date-time-iso8601",
-					"description": "the time that the info was retrieved from the live page",
-					"required": true
-				},
-				{
-					"name": "site",
-					"type": "site",
-					"description": "information about the site this page is hosted on",
-					"required": true
-				},
-				{
-					"name": "open_graph_metadata",
-					"type": "open_graph_metadata",
-					"description": "The Open Graph protocol enables any web page to become a rich object in a social graph. For instance, this is used on Facebook to allow any web page to have the same functionality as any other object on Facebook.",
-					"required": false
-				},
-				{
-					"name": "apple_itunes_metadata",
-					"type": "apple_itunes_metadata",
-					"description": "provides a standardized method of promoting apps on the App Store from a website.",
-					"required": false
-				},
-				{
-					"name": "twitter_card_metadata",
-					"type": "twitter_card_metadata",
-					"description": "Enriched information embedded by site developers to enable a richer experience when this site is linked to from twitter.  See https://dev.twitter.com/cards/overview.",
-					"required": false
-				},
-				{
-					"name": "schema_org_items",
-					"type": "[schema_org_item]",
-					"description": "schema.org is a collaboration by Google, Microsoft, and Yahoo! to improve the web by creating a structured data markup schema supported by major search engines. On-page markup helps search engines understand the information on webpages and provide richer results. A shared markup vocabulary makes it easier for webmasters to decide on a markup schema and get maximum benefit for their efforts.",
-					"required": false
-				},
-				{
-					"name": "search_metadata",
-					"type": "search_metadata",
-					"description": "Basic metadata provided to be indexed by common search engines, most notably Google.  See https://support.google.com/webmasters/answer/79812?hl=en.",
-					"required": false
-				}
-			]
-		}
-	},
-	"resources": {
-		"page_info" : {
-			"path": "/page_info",
-			"operations": [
-			{
-				"method": "GET",
-				"path": "",
-				"description": "shreds page info from a specified web page",
-				"parameters": [
-					{
-						"name": "url",
-						"type": "string",
-						"description": "http or https url to find information about a product on",
-						"example": "http://smile.amazon.com/gp/product/B00DYIKXUC?tag=thesweethome-20&linkCode=as2&sa-no-redirect=1"
-					}
-				],
-				"responses": {
-					"200": {
-						"type": "page_info"
-					}
-				}
-			},
-			{
-				"method": "GET",
-				"path": "/open_graph_metadata_for_url",
-				"description": "shreds open graph metadata from a specified web page",
-				"parameters": [
-					{
-						"name": "url",
-						"type": "string",
-						"description": "http or https url to find information about a product on",
-						"example": "http://smile.amazon.com/gp/product/B00DYIKXUC?tag=thesweethome-20&linkCode=as2&sa-no-redirect=1"
-					}
-				],
-				"responses": {
-					"200": {
-						"type": "open_graph_metadata"
-					}
-				}
-			},
-				{
-					"method": "GET",
-					"path": "/apple_itunes_metadata_for_url",
-					"description": "shreds apple itunes metadata from a specified web page",
-					"parameters": [
-						{
-							"name": "url",
-							"type": "string",
-							"description": "http or https url to find information about a product on",
-							"example": "http://smile.amazon.com/gp/product/B00DYIKXUC?tag=thesweethome-20&linkCode=as2&sa-no-redirect=1"
-						}
-					],
-					"responses": {
-						"200": {
-							"type": "apple_itunes_metadata"
-						}
-					}
-				},
-				{
-					"method": "GET",
-					"path": "/search_metadata_for_url",
-					"description": "shreds search metadata from a specified web page",
-					"parameters": [
-						{
-							"name": "url",
-							"type": "string",
-							"description": "http or https url to find information about a product on",
-							"example": "http://smile.amazon.com/gp/product/B00DYIKXUC?tag=thesweethome-20&linkCode=as2&sa-no-redirect=1"
-						}
-					],
-					"responses": {
-						"200": {
-							"type": "search_metadata"
-						}
-					}
-				},
-				{
-					"method": "GET",
-					"path": "/twitter_card_metadata_for_url",
-					"description": "shreds twitter card metadata from a specified web page",
-					"parameters": [
-						{
-							"name": "url",
-							"type": "string",
-							"description": "http or https url to find information about a product on",
-							"example": "http://smile.amazon.com/gp/product/B00DYIKXUC?tag=thesweethome-20&linkCode=as2&sa-no-redirect=1"
-						}
-					],
-					"responses": {
-						"200": {
-							"type": "twitter_card_metadata"
-						}
-					}
-				},
-				{
-					"method": "GET",
-					"path": "/schema_org_items_for_url",
-					"description": "shreds schema.org items from a specified web page",
-					"parameters": [
-						{
-							"name": "url",
-							"type": "string",
-							"description": "http or https url to find information about a product on",
-							"example": "http://smile.amazon.com/gp/product/B00DYIKXUC?tag=thesweethome-20&linkCode=as2&sa-no-redirect=1"
-						}
-					],
-					"responses": {
-						"200": {
-							"type": "[schema_org_item]"
-						}
-					}
-				}
-			]
-		}
-	}
+  "name": "oroku",
+  "base_url": "",
+  "description": "an api for parsing useful information on webpages",
+  "enums": {
+    "open_graph_type": {
+      "description": "The type of your object according to the open graph protocol.  When the community agrees on the schema for a type, it is added to the list of global types. All other objects in the type system are CURIEs of the form.",
+      "values": [
+        {
+          "name": "article"
+        },
+        {
+          "name": "book"
+        },
+        {
+          "name": "profile"
+        },
+        {
+          "name": "website"
+        }
+      ]
+    },
+    "twitter_card_type": {
+      "description": "The card type specified for this page that will affect how a link to this page will be rendered if posted on twitter. See: https://dev.twitter.com/cards/types.",
+      "values": [
+        {
+          "name": "summary",
+          "description": "Default Card, including a title, description, thumbnail, and Twitter account attribution. See https://dev.twitter.com/cards/types/summary."
+        },
+        {
+          "name": "summary_large_image",
+          "description": "Similar to a Summary Card, but with a prominently featured image. See https://dev.twitter.com/cards/types/summary-large-image"
+        },
+        {
+          "name": "photo",
+          "description": "A Card with a photo only. See https://dev.twitter.com/cards/types/photo."
+        },
+        {
+          "name": "gallery",
+          "description": "A Card highlighting a collection of four photos. See https://dev.twitter.com/cards/types/gallery"
+        },
+        {
+          "name": "app",
+          "description": "A Card to detail a mobile app with direct download.  See https://dev.twitter.com/cards/types/app"
+        },
+        {
+          "name": "player",
+          "description": "A Card to provide video/audio/media. See https://dev.twitter.com/cards/types/player"
+        },
+        {
+          "name": "product",
+          "description": "A Card optimized for product information. See https://dev.twitter.com/cards/types/product."
+        }
+      ]
+    }
+  },
+  "models": {
+    "meta_twitter_card_type": {
+      "description": "An html head meta tag that has been parsed for twitter_card_type content.",
+      "fields": [
+        {
+          "name": "value",
+          "type": "twitter_card_type",
+          "description": "The twitter_card_type value of this meta tag.",
+          "required": true
+        },
+        {
+          "name": "tag",
+          "type": "string",
+          "description": "The raw html meta tag that this value was derived from.",
+          "required": true
+        }
+      ]
+    },
+    "meta_open_graph_type": {
+      "description": "An html head meta tag that has been parsed for open_graph_type content.",
+      "fields": [
+        {
+          "name": "value",
+          "type": "open_graph_type",
+          "description": "The open_graph_type value of this meta tag.",
+          "required": true
+        },
+        {
+          "name": "tag",
+          "type": "string",
+          "description": "The raw html meta tag that this value was derived from.",
+          "required": true
+        }
+      ]
+    },
+    "meta_string": {
+      "description": "An html head meta tag that has been parsed for string content.",
+      "fields": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "The string value of this meta tag.",
+          "required": true
+        },
+        {
+          "name": "tag",
+          "type": "string",
+          "description": "The raw html meta tag that this value was derived from.",
+          "required": true
+        }
+      ]
+    },
+    "meta_decimal": {
+      "description": "An html head meta tag that has been parsed for decimal content.",
+      "fields": [
+        {
+          "name": "value",
+          "type": "decimal",
+          "description": "The decimal value of this meta tag.",
+          "required": true
+        },
+        {
+          "name": "tag",
+          "type": "string",
+          "description": "The raw html meta tag that this value was derived from.",
+          "required": true
+        }
+      ]
+    },
+    "meta_integer": {
+      "description": "An html head meta tag that has been parsed for integer content.",
+      "fields": [
+        {
+          "name": "value",
+          "type": "integer",
+          "description": "The integer value of this meta tag.",
+          "required": true
+        },
+        {
+          "name": "tag",
+          "type": "string",
+          "description": "The raw html meta tag that this value was derived from.",
+          "required": true
+        }
+      ]
+    },
+    "meta_boolean": {
+      "description": "An html head meta tag that has been parsed for boolean content.",
+      "fields": [
+        {
+          "name": "value",
+          "type": "boolean",
+          "description": "The boolean value of this meta tag.",
+          "required": true
+        },
+        {
+          "name": "tag",
+          "type": "string",
+          "description": "The raw html meta tag that this value was derived from.",
+          "required": true
+        }
+      ]
+    },
+    "meta_date_time_iso8601": {
+      "description": "An html head meta tag that has been parsed for date time content.",
+      "fields": [
+        {
+          "name": "value",
+          "type": "date-time-iso8601",
+          "description": "The date-time value of this meta tag.",
+          "required": true
+        },
+        {
+          "name": "tag",
+          "type": "string",
+          "description": "The raw html meta tag that this value was derived from.",
+          "required": true
+        }
+      ]
+    },
+    "price": {
+      "description": "A price for a product on this page",
+      "fields": [
+        {
+          "name": "amount",
+          "type": "meta_decimal",
+          "description": "The amount of this price.",
+          "required": true,
+          "example": "1.99"
+        },
+        {
+          "name": "currency",
+          "type": "meta_string",
+          "description": "The currency that this product is presented in ISO-4217 currency code https://en.wikipedia.org/wiki/ISO_4217#Active_codes",
+          "required": false,
+          "example": "USD"
+        }
+      ]
+    },
+    "twitter_user": {
+      "description": "User info declared for parsing into a twitter card.  See: https://dev.twitter.com/cards/markup",
+      "fields": [
+        {
+          "name": "username",
+          "type": "meta_string",
+          "description": "username of site or creator",
+          "required": false,
+          "example": "@nytimes"
+        },
+        {
+          "name": "id",
+          "type": "meta_integer",
+          "description": "Same as username, but the user's Twitter ID",
+          "required": false
+        }
+      ]
+    },
+    "twitter_custom_field": {
+      "description": "A customizable data field to display on a twitter card",
+      "fields": [
+        {
+          "name": "data",
+          "description": "Top customizable data field, can be a relatively short string",
+          "type": "meta_string",
+          "required": true,
+          "example": "$3.99"
+        },
+        {
+          "name": "label",
+          "description": "Customizable label or units for the information in twitter:data1 (best practice: use all caps)",
+          "type": "meta_string",
+          "required": false,
+          "example": "PRICE"
+        }
+      ]
+    },
+    "twitter_app_store_info": {
+      "description": "Information linking twitter card data to an app store. See https://dev.twitter.com/cards/types/app",
+      "fields": [
+        {
+          "name": "id",
+          "description": "Should be the represenation of your app id in its respective store",
+          "type": "meta_string",
+          "required": true,
+          "example": "307234931"
+        },
+        {
+          "name": "name",
+          "description": "Name of your app",
+          "type": "meta_string",
+          "required": false,
+          "example": "Cannonball"
+        },
+        {
+          "name": "url",
+          "description": "Your app's custom URL scheme (you must include :// after your scheme name)",
+          "type": "meta_string",
+          "required": false,
+          "example": "cannonball://poem/5149e249222f9e600a7540ef"
+        }
+      ]
+    },
+    "twitter_app_info": {
+      "description": "A twitter card to detail a mobile app with direct download.",
+      "fields": [
+        {
+          "name": "country",
+          "description": "If your application is not available in the US App Store, you must set this value to the two-letter country code for the App Store that contains your application.",
+          "type": "meta_string",
+          "required": false,
+          "example": "US"
+        },
+        {
+          "name": "iphone",
+          "description": "iPhone app store information",
+          "type": "twitter_app_store_info",
+          "required": false
+        },
+        {
+          "name": "ipad",
+          "description": "iPad app store information",
+          "type": "twitter_app_store_info",
+          "required": false
+        },
+        {
+          "name": "googleplay",
+          "description": "Google Play store information",
+          "type": "twitter_app_store_info",
+          "required": false
+        }
+      ]
+    },
+    "apple_itunes_metadata": {
+      "description": "Information provided to show a smart app banner to direct the user to an equivalent app store listing when viewing this webpage on iOS.  See https://developer.apple.com/library/ios/documentation/AppleApplications/Reference/SafariWebContent/PromotingAppswithAppBanners/PromotingAppswithAppBanners.html",
+      "fields": [
+        {
+          "name": "app_id",
+          "type": "meta_integer",
+          "description": "Your app's unique identifier. To find your app ID from the iTunes Link Maker, type the name of your app in the Search field, and select the appropriate country and media type. In the results, find your app and select iPhone App Link in the column on the right. Your app ID is the nine-digit number in between id and ?mt.",
+          "required": true,
+          "example": "000000000"
+        },
+        {
+          "name": "affiliate_data",
+          "type": "meta_string",
+          "description": "Your iTunes affiliate string, if you are an iTunes affiliate. If you are not, find out more about becoming an iTunes affiliate at http://www.apple.com/itunes/affiliates/.",
+          "required": false
+        },
+        {
+          "name": "app_argument",
+          "type": "meta_string",
+          "description": "A URL that provides context to your native app. If you include this, and the user has your app installed, she can jump from your website to the corresponding position in your iOS app.",
+          "required": false
+        }
+      ]
+    },
+    "media_object": {
+      "description": "A media type specified by open graph. The og:image, og:audio, and og:video property has some optional structured properties.",
+      "fields": [
+        {
+          "name": "url",
+          "type": "meta_string",
+          "description": "An image URL which should represent your object within the graph",
+          "required": true,
+          "example": "http://example.com/ogp.jpg"
+        },
+        {
+          "name": "secure_url",
+          "type": "meta_string",
+          "description": "An alternate url to use if the webpage requires HTTPS.",
+          "required": false,
+          "example": "https://secure.example.com/ogp.jpg"
+        },
+        {
+          "name": "mime_type",
+          "type": "meta_string",
+          "description": "A MIME type for this media",
+          "required": false,
+          "example": "image/jpeg"
+        },
+        {
+          "name": "width",
+          "type": "meta_integer",
+          "description": "The number of pixels wide. Does not apply to audio.",
+          "required": false,
+          "example": "400"
+        },
+        {
+          "name": "height",
+          "type": "meta_integer",
+          "description": "The number of pixels high.  Does not apply to audio.",
+          "required": false,
+          "example": "400"
+        }
+      ]
+    },
+    "open_graph_metadata": {
+      "description": "Information about the site presented in opengraph format (see ogp.me)",
+      "fields": [
+        {
+          "name": "title",
+          "type": "meta_string",
+          "description": "The title of your object as it should appear within the graph.",
+          "example": "The Rock",
+          "required": false
+        },
+        {
+          "name": "open_graph_type",
+          "type": "meta_open_graph_type",
+          "description": "The type of your object. Depending on the type specified, other optional properties may be present.",
+          "example": "video.movie",
+          "required": false
+        },
+        {
+          "name": "image",
+          "type": "media_object",
+          "description": "An image URL which should represent your object within the graph",
+          "required": false,
+          "example": "http://ia.media-imdb.com/images/rock.jpg"
+        },
+        {
+          "name": "url",
+          "type": "meta_string",
+          "description": "The canonical UJRL of your object that will be used as its permanent ID in the graph",
+          "example": "http://www.imdb.com/title/tt0117500/",
+          "required": false
+        },
+        {
+          "name": "description",
+          "type": "meta_string",
+          "description": "A one to two sentence description of your object.",
+          "required": false,
+          "example:": "Sean Connery found fame and fortune as the suave, sophisticated British agent, James Bond."
+        },
+        {
+          "name": "determiner",
+          "type": "meta_string",
+          "description": "The word that appears before this object's title in a sentence. An enum of (a, an, the, \"\", auto). If auto is chosen, the consumer of your data should chose between \"a\" or \"an\".",
+          "example": "an",
+          "required": false
+        },
+        {
+          "name": "locale",
+          "type": "meta_string",
+          "description": "The locale these tags are marked up in. Of the format language_TERRITORY.",
+          "example": "en_US",
+          "required": "false"
+        },
+        {
+          "name": "locale_alternative",
+          "type": "[meta_string]",
+          "description": "An array of other locales this page is available in.",
+          "required": false
+        },
+        {
+          "name": "site_name",
+          "type": "meta_string",
+          "description": "If your object is part of a larger web site, the name which should be displayed for the overall site. ",
+          "example": "IMDb",
+          "required": false
+        },
+        {
+          "name": "video",
+          "type": "media_object",
+          "description": "A URL to a video file that complements this object.",
+          "required": false
+        },
+        {
+          "name": "audio",
+          "type": "media_object",
+          "description": "A URL to a audio file that complements this object.",
+          "required": false
+        },
+        {
+          "name": "updated_time",
+          "type": "meta_date_time_iso8601",
+          "description": "The date time that this website was last updated.",
+          "required": false
+        },
+        {
+          "name": "see_also",
+          "type": "meta_string",
+          "description": "A URL associated with this page",
+          "required": false
+        },
+        {
+          "name": "app_id",
+          "type": "meta_string",
+          "description": "A facebook app id associated with this page.",
+          "required": false
+        },
+        {
+          "name": "profile_id",
+          "type": "meta_string",
+          "description": "A facebook profile id associated with this page.",
+          "required": false
+        },
+        {
+          "name": "sale_price",
+          "type": "price",
+          "description": "",
+          "required": false
+        },
+        {
+          "name": "price",
+          "type": "price",
+          "description": "",
+          "required": false
+        },
+        {
+          "name": "original_price",
+          "type": "price",
+          "description": "",
+          "required": false
+        }
+      ]
+    },
+    "extracted_metadata": {
+      "description": "Extracted metadata based on common webpage and article publishing conventions, roughly based on Readability and Goose https://github.com/jiminoc/goose/wiki",
+      "fields": [
+        {
+          "name": "text",
+          "type": "meta_string",
+          "description": "The main text of the article or webpage.",
+          "example": "Sean Connery found fame and fortune as the suave, sophisticated British agent, James Bond.",
+          "required": false
+        },
+        {
+          "name": "images",
+          "type": "[media_object]",
+          "description": "The most probable candidate images on the page, in descending order of their perceived significance",
+          "required": true
+        },
+        {
+          "name": "description",
+          "type": "meta_string",
+          "description": "A one to two sentence description of your object.",
+          "required": false,
+          "example:": "Sean Connery found fame and fortune as the suave, sophisticated British agent, James Bond."
+        }
+      ]
+    },
+    "site": {
+      "description": "information about the domain that this site is hosted on.",
+      "fields": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "the name of the site",
+          "example": "IMDb"
+        },
+        {
+          "name": "site_type",
+          "type": "string",
+          "description": "the type of site",
+          "default": "website"
+        },
+        {
+          "name": "domain",
+          "type": "string",
+          "description": "The domain that this content is hosted on originally",
+          "example": "iheart.com",
+          "required": false
+        }
+      ]
+    },
+    "search_metadata": {
+      "description": "Meta tags provide search engines with information about their sites. Meta tags can be used to provide information to all sorts of clients, and each system processes only the meta tags they understand and ignores the rest.  See https://support.google.com/webmasters/answer/79812?hl=en.",
+      "fields": [
+        {
+          "name": "description",
+          "type": "meta_string",
+          "description": "This tag provides a short description of the page. In some situations this description is used as a part of the snippet shown in the search results.",
+          "required": false,
+          "example": ""
+        },
+        {
+          "name": "title",
+          "type": "meta_string",
+          "description": "The contents of this tag are generally shown as the title in search results.",
+          "required": false
+        },
+        {
+          "name": "robots",
+          "type": "[meta_string]",
+          "description": "These meta tags can control the behavior of search engine crawling and indexing. The robots meta tag applies to all search engines, while the \"googlebot\" meta tag is specific to Google. The default values are \"index, follow\" (the same as \"all\") and do not need to be specified.  See also https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag?csw=1.",
+          "example": "index, follow",
+          "required": false
+        },
+        {
+          "name": "googlebot",
+          "type": "[meta_string]",
+          "description": "These meta tags can control the behavior of search engine crawling and indexing. The robots meta tag applies to all search engines, while the \"googlebot\" meta tag is specific to Google. The default values are \"index, follow\" (the same as \"all\") and do not need to be specified.  See also https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag?csw=1.",
+          "example": "index, follow",
+          "required": false
+        },
+        {
+          "name": "google_site_link_search_box",
+          "type": "meta_boolean",
+          "description": "This meta tag tells Google not to show the sitelinks search box. See also https://developers.google.com/webmasters/richsnippets/sitelinkssearch.",
+          "required": false
+        },
+        {
+          "name": "google_notranslate",
+          "type": "meta_boolean",
+          "description": "This meta tag tells Google that you don't want us to provide a translation for this page.",
+          "required": false
+        },
+        {
+          "name": "google_site_verification",
+          "type": "[meta_string]",
+          "description": "You can use this tag on the top-level page of your site to verify ownership for Webmaster Tools. See also https://support.google.com/webmasters/answer/35659.",
+          "required": false
+        },
+        {
+          "name": "charset",
+          "type": "meta_string",
+          "description": "This attribute declares the character encoding used on the page.",
+          "required": false,
+          "example": "utf-8"
+        },
+        {
+          "name": "content_type",
+          "type": "meta_string",
+          "description": "iThis defines the page's content type.  See also: https://developers.google.com/webmasters/state-of-the-web/2005/metadata?csw=1",
+          "required": false,
+          "example": "text/html"
+        },
+        {
+          "name": "keywords",
+          "type": "[meta_string]",
+          "description": "A set of keywords associated with this website. Note that these have been confirmed to NOT be used by Google in their search engine ranking algorithm (http://googlewebmastercentral.blogspot.com/2009/09/google-does-not-use-keywords-meta-tag.html). However other sites, most notably China's Baidu do use them (http://searchengineland.com/the-b2b-marketers-guide-to-baidu-seo-180658), so it is still a good practice to use these if you expect a large amount of traffic from China.",
+          "required": false
+        }
+      ]
+    },
+    "brand_object": {
+      "description": "A brand is a name used by an organization or business person for labeling a product, product group, or similar.",
+      "fields": [
+        {
+          "name": "logo",
+          "type": "string",
+          "description": "A logo associated with an organization",
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "The name of the brand",
+          "required": false
+        }
+      ]
+    },
+    "schema_org_item": {
+      "description": "The representation of an item according to schema.org. schema.org is a collaboration by Google, Microsoft, and Yahoo! to improve the web by creating a structured data markup schema supported by major search engines. Multiple item scopes can be included on one page.  Only the most common properties are currently parsed. See: http://schema.org/docs/gs.html.",
+      "fields": [
+        {
+          "name": "item_type",
+          "type": "meta_string",
+          "description": "You can specify the type of item using the itemtype attribute immediately after the itemscope.  The full hierarchy of types is available at http://schema.org/docs/full.html.",
+          "required": false
+        },
+        {
+          "name": "name",
+          "type": "meta_string",
+          "description": "The name of the item. See http://schema.org/name",
+          "required": false
+        },
+        {
+          "name": "alternate_name",
+          "type": "meta_string",
+          "description": "An alias for the item",
+          "required": false
+        },
+        {
+          "name": "description",
+          "type": "meta_string",
+          "description": "A short description of the item.",
+          "required": false
+        },
+        {
+          "name": "image",
+          "type": "meta_string",
+          "description": "An image of the item.",
+          "required": false
+        },
+        {
+          "name": "url",
+          "type": "meta_string",
+          "description": "URL of the item.",
+          "required": false
+        },
+        {
+          "name": "same_as",
+          "type": "meta_string",
+          "description": "URL of a reference Web page that unambiguously indicates the item's identity. E.g. the URL of the item's Wikipedia page, Freebase page, or official website.",
+          "required": false
+        },
+        {
+          "name": "brand",
+          "type": "brand_object",
+          "description": "A brand is a name used by an organization or business person for labeling a product, product group, or similar.",
+          "required": false
+        },
+        {
+          "name": "color",
+          "type": "meta_string",
+          "description": "The color of the product.",
+          "required": false
+        },
+        {
+          "name": "productId",
+          "type": "meta_string",
+          "description": "The product identifier, such as ISBN.",
+          "example": "isbn:123-456-789",
+          "required": false
+        },
+        {
+          "name": "sku",
+          "type": "meta_string",
+          "description": "The Stock Keeping Unit (SKU), i.e. a merchant-specific identifier for a product or service, or the product to which the offer refers.",
+          "required": false
+        },
+        {
+          "name": "model",
+          "type": "meta_string",
+          "description": "The model of the product. Use with the URL of a ProductModel or a textual representation of the model identifier. The URL of the ProductModel can be from an external source. It is recommended to additionally provide strong product identifiers via the gtin8/gtin13/gtin14 and mpn properties.",
+          "required": false
+        },
+        {
+          "name": "gtin8",
+          "type": "meta_string",
+          "description": "The GTIN-8 code of the product, or the product to which the offer refers. This code is also known as EAN/UCC-8 or 8-digit EAN. See GS1 GTIN Summary for more details.",
+          "required": false
+        },
+        {
+          "name": "gtin13",
+          "type": "meta_string",
+          "description": "The GTIN-13 code of the product, or the product to which the offer refers.",
+          "required": false
+        },
+        {
+          "name": "gtin14",
+          "type": "meta_string",
+          "description": "The GTIN-14 code of the product, or the product to which the offer refers.",
+          "required": false
+        }
+      ]
+    },
+    "twitter_card_metadata": {
+      "description": "Additinal information provided by a webpage to control how a link to that page is rendered when posted on twitter. See also: https://dev.twitter.com/cards/markup.",
+      "fields": [
+        {
+          "name": "images",
+          "type": "[media_object]",
+          "description": "Primary image to use in the card.",
+          "required": true
+        },
+        {
+          "name": "card",
+          "type": "meta_twitter_card_type",
+          "description": "the card type",
+          "example": "summary",
+          "required": false
+        },
+        {
+          "name": "url",
+          "type": "meta_string",
+          "description": "the pages canonical url",
+          "example": "https://www.twitter.com",
+          "required": false
+        },
+        {
+          "name": "domain",
+          "type": "meta_string",
+          "description": "The domain that this content is hosted on originally",
+          "example": "iheart.com",
+          "required": false
+        },
+        {
+          "name": "site",
+          "type": "twitter_user",
+          "description": "the twitter user associated with this website",
+          "required": false
+        },
+        {
+          "name": "creator",
+          "type": "twitter_user",
+          "description": "the twitter user associated with the content creator",
+          "required": false
+        },
+        {
+          "name": "description",
+          "type": "meta_string",
+          "description": "Description of content (maximum 200 characters)",
+          "required": false
+        },
+        {
+          "name": "title",
+          "type": "meta_string",
+          "description": "Title of content (max 70 characters)",
+          "example": "Mountain sunset",
+          "required": false
+        },
+        {
+          "name": "app",
+          "type": "twitter_app_info",
+          "description": "Information linking this page to app stores",
+          "required": false
+        },
+        {
+          "name": "custom_fields",
+          "type": "[twitter_custom_field]",
+          "description": "Custom fields displayed on a twitter card",
+          "required": false
+        }
+      ]
+    },
+    "page_info": {
+      "description": "The basic information on this webpage, according to major metadata tagging standards and conventions, as well as information derived from the content of the page itself.",
+      "plural": "page_info",
+      "fields": [
+        {
+          "name": "titles",
+          "type": "[string]",
+          "description": "titles found on the page- sorted in order of how relevant they are",
+          "required": true
+        },
+        {
+          "name": "images",
+          "type": "[string]",
+          "description": "images found on the page- sorted in order of how relevant they are",
+          "required": true
+        },
+        {
+          "name": "descriptions",
+          "type": "[string]",
+          "description": "descriptions found on the page- sorted in order of how relevant they are",
+          "required": true
+        },
+        {
+          "name": "urls",
+          "type": "[string]",
+          "description": "urls found for the page- the canonical url if available",
+          "required": true
+        },
+        {
+          "name": "keywords",
+          "type": "[string]",
+          "description": "keywords found on the page",
+          "required": true
+        },
+        {
+          "name": "categories",
+          "type": "[string]",
+          "description": "the category of the product on the page",
+          "required": true
+        },
+        {
+          "name": "locations",
+          "type": "[string]",
+          "description": "locations found on the page",
+          "required": true
+        },
+        {
+          "name": "prices",
+          "type": "[price]",
+          "description": "prices found on the page",
+          "required": true
+        },
+        {
+          "name": "retrieved_at",
+          "type": "date-time-iso8601",
+          "description": "the time that the info was retrieved from the live page",
+          "required": true
+        },
+        {
+          "name": "site",
+          "type": "site",
+          "description": "information about the site this page is hosted on",
+          "required": true
+        },
+        {
+          "name": "open_graph_metadata",
+          "type": "open_graph_metadata",
+          "description": "The Open Graph protocol enables any web page to become a rich object in a social graph. For instance, this is used on Facebook to allow any web page to have the same functionality as any other object on Facebook.",
+          "required": false
+        },
+        {
+          "name": "apple_itunes_metadata",
+          "type": "apple_itunes_metadata",
+          "description": "provides a standardized method of promoting apps on the App Store from a website.",
+          "required": false
+        },
+        {
+          "name": "twitter_card_metadata",
+          "type": "twitter_card_metadata",
+          "description": "Enriched information embedded by site developers to enable a richer experience when this site is linked to from twitter.  See https://dev.twitter.com/cards/overview.",
+          "required": false
+        },
+        {
+          "name": "schema_org_items",
+          "type": "[schema_org_item]",
+          "description": "schema.org is a collaboration by Google, Microsoft, and Yahoo! to improve the web by creating a structured data markup schema supported by major search engines. On-page markup helps search engines understand the information on webpages and provide richer results. A shared markup vocabulary makes it easier for webmasters to decide on a markup schema and get maximum benefit for their efforts.",
+          "required": false
+        },
+        {
+          "name": "search_metadata",
+          "type": "search_metadata",
+          "description": "Basic metadata provided to be indexed by common search engines, most notably Google.  See https://support.google.com/webmasters/answer/79812?hl=en.",
+          "required": false
+        },
+        {
+          "name": "extracted_metadata",
+          "type": "extracted_metadata",
+          "description": "Extracted metadata based on common article and webpage publishing standards and assumptions.",
+          "required": false
+        }
+      ]
+    }
+  },
+  "resources": {
+    "page_info": {
+      "path": "/page_info",
+      "operations": [
+        {
+          "method": "GET",
+          "path": "",
+          "description": "shreds page info from a specified web page",
+          "parameters": [
+            {
+              "name": "url",
+              "type": "string",
+              "description": "http or https url to find information about a product on",
+              "example": "http://smile.amazon.com/gp/product/B00DYIKXUC?tag=thesweethome-20&linkCode=as2&sa-no-redirect=1"
+            }
+          ],
+          "responses": {
+            "200": {
+              "type": "page_info"
+            }
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/open_graph_metadata_for_url",
+          "description": "shreds open graph metadata from a specified web page",
+          "parameters": [
+            {
+              "name": "url",
+              "type": "string",
+              "description": "http or https url to find information about a product on",
+              "example": "http://smile.amazon.com/gp/product/B00DYIKXUC?tag=thesweethome-20&linkCode=as2&sa-no-redirect=1"
+            }
+          ],
+          "responses": {
+            "200": {
+              "type": "open_graph_metadata"
+            }
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/apple_itunes_metadata_for_url",
+          "description": "shreds apple itunes metadata from a specified web page",
+          "parameters": [
+            {
+              "name": "url",
+              "type": "string",
+              "description": "http or https url to find information about a product on",
+              "example": "http://smile.amazon.com/gp/product/B00DYIKXUC?tag=thesweethome-20&linkCode=as2&sa-no-redirect=1"
+            }
+          ],
+          "responses": {
+            "200": {
+              "type": "apple_itunes_metadata"
+            }
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/search_metadata_for_url",
+          "description": "shreds search metadata from a specified web page",
+          "parameters": [
+            {
+              "name": "url",
+              "type": "string",
+              "description": "http or https url to find information about a product on",
+              "example": "http://smile.amazon.com/gp/product/B00DYIKXUC?tag=thesweethome-20&linkCode=as2&sa-no-redirect=1"
+            }
+          ],
+          "responses": {
+            "200": {
+              "type": "search_metadata"
+            }
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/twitter_card_metadata_for_url",
+          "description": "shreds twitter card metadata from a specified web page",
+          "parameters": [
+            {
+              "name": "url",
+              "type": "string",
+              "description": "http or https url to find information about a product on",
+              "example": "http://smile.amazon.com/gp/product/B00DYIKXUC?tag=thesweethome-20&linkCode=as2&sa-no-redirect=1"
+            }
+          ],
+          "responses": {
+            "200": {
+              "type": "twitter_card_metadata"
+            }
+          }
+        },
+        {
+          "method": "GET",
+          "path": "/schema_org_items_for_url",
+          "description": "shreds schema.org items from a specified web page",
+          "parameters": [
+            {
+              "name": "url",
+              "type": "string",
+              "description": "http or https url to find information about a product on",
+              "example": "http://smile.amazon.com/gp/product/B00DYIKXUC?tag=thesweethome-20&linkCode=as2&sa-no-redirect=1"
+            }
+          ],
+          "responses": {
+            "200": {
+              "type": "[schema_org_item]"
+            }
+          }
+        }
+      ]
+    }
+  }
 }

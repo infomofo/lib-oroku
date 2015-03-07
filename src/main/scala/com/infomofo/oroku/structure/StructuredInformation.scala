@@ -1,33 +1,37 @@
 package com.infomofo.oroku.structure
 
-import com.infomofo.oroku.models
+import com.infomofo.oroku.v0.models
 
 /**
  * Structured Information is a trait that unifies how information from various sources can be unified
  */
 trait StructuredInformation {
 
-  def urls: Seq[String]
-  def titles: Seq[String]
-  def keywords: Seq[String]
-  def locations: Seq[String]
-  def descriptions: Seq[String]
-  def siteNames: Seq[String]
-  def siteTypes: Seq[String]
-  def images: Seq[String]
+  def urls: Seq[String] = Nil
+
+  def titles: Seq[String] = Nil
+
+  def keywords: Seq[String] = Nil
+
+  def locations: Seq[String] = Nil
+
+  def descriptions: Seq[String] = Nil
+
+  def siteNames: Seq[String] = Nil
+
+  def siteTypes: Seq[String] = Nil
+
+  def images: Seq[String] = Nil
 }
 
 object StructuredInformation {
+
   implicit class StructuredOpenGraphMetadata(val self: models.OpenGraphMetadata)
     extends StructuredInformation {
 
     override def titles: Seq[String] = self.title.toSeq.map(_.value)
 
     override def urls: Seq[String] = self.url.toSeq.map(_.value)
-
-    override def locations: Seq[String] = Nil
-
-    override def keywords: Seq[String] = Nil
 
     override def descriptions: Seq[String] = self.description.toSeq.map(_.value)
 
@@ -48,15 +52,9 @@ object StructuredInformation {
 
     override def urls: Seq[String] = self.url.toSeq.map(_.value)
 
-    override def locations: Seq[String] = Nil
-
-    override def keywords: Seq[String] = Nil
-
     override def descriptions: Seq[String] = self.description.toSeq.map(_.value)
 
     override def siteNames: Seq[String] = self.site.toSeq.flatMap(_.username.map(_.value))
-
-    override def siteTypes: Seq[String] = Nil
 
     override def images: Seq[String] = self.images.map(_.url.value)
   }
@@ -68,19 +66,10 @@ object StructuredInformation {
 
     override def titles: Seq[String] = self.title.toSeq.map(_.value)
 
-    override def urls: Seq[String] = Nil
-
-    override def locations: Seq[String] = Nil
-
     override def keywords: Seq[String] = self.keywords.map(_.value)
 
     override def descriptions: Seq[String] = self.description.toSeq.map(_.value)
 
-    override def siteNames: Seq[String] = Nil
-
-    override def siteTypes: Seq[String] = Nil
-
-    override def images: Seq[String] = Nil
   }
 
   def apply(meta: models.SearchMetadata) = StructuredSearchMetadata(meta)
@@ -106,5 +95,17 @@ object StructuredInformation {
   }
 
   def apply(meta: Seq[models.SchemaOrgItem]) = StructuredSchemaOrgMetadata(meta)
+
+
+  implicit class StructuredExtractedMetadata(val self: models.ExtractedMetadata)
+    extends StructuredInformation {
+
+    override def descriptions: Seq[String] = self.description.toSeq.map(_.value)
+
+    override def images: Seq[String] = self.images.map(_.url.value)
+  }
+
+  def apply(meta: models.ExtractedMetadata) = StructuredExtractedMetadata(meta)
+
 }
 

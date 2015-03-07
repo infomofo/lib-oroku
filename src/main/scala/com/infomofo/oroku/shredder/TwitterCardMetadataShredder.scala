@@ -5,7 +5,7 @@ import org.jsoup.select.Elements
 
 import scala.util.Try
 
-import com.infomofo.oroku.models
+import com.infomofo.oroku.v0.models
 
 private[shredder] trait TwitterCardMetadataShredder extends OpenGraphMetadataShredder with LazyLogging {
 

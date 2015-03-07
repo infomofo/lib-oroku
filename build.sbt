@@ -14,3 +14,4 @@ libraryDependencies ++= Seq(
   "org.scalatest"               %%  "scalatest"     % "2.1.6" % "test"
 )
 
+logLevel in console := Level.Debug

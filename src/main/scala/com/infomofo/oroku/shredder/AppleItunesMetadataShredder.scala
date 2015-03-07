@@ -1,6 +1,6 @@
 package com.infomofo.oroku.shredder
 
-import com.infomofo.oroku.models
+import com.infomofo.oroku.v0.models
 import com.typesafe.scalalogging.LazyLogging
 
 private[shredder] trait AppleItunesMetadataShredder extends MetaShredder with LazyLogging {

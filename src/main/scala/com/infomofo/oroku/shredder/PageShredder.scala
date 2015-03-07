@@ -3,7 +3,7 @@ package com.infomofo.oroku.shredder
 import java.io.File
 import java.net.URL
 
-import com.infomofo.oroku.models
+import com.infomofo.oroku.v0.models
 import com.infomofo.oroku.structure.StructuredInformation
 import com.typesafe.scalalogging.LazyLogging
 import org.joda.time.DateTime
@@ -83,6 +83,7 @@ class PageShredder(document: Document, url: Option[URL] = None)
   with SearchMetadataShredder
   with AppleItunesMetadataShredder
   with SchemaOrgMetadataShredder
+  with ExtractedMetadataShredder
   with LazyLogging {
 
   private lazy val headElement = document.head
@@ -98,8 +99,9 @@ class PageShredder(document: Document, url: Option[URL] = None)
     val structuredTwitterData = twitterCardMetadata.toSeq.map(StructuredInformation(_))
     val structuredSearchData = searchMetadata.toSeq.map(StructuredInformation(_))
     val structuredSchemaOrgMetadata = Some(StructuredInformation(schemaOrgItems))
+    val structuredExtractedMetadata = extractedMetadata.toSeq.map(StructuredInformation(_))
 
-    structuredOpenGraphMetadata ++ structuredTwitterData ++ structuredSearchData ++ structuredSchemaOrgMetadata
+    structuredOpenGraphMetadata ++ structuredTwitterData ++ structuredSearchData ++ structuredSchemaOrgMetadata ++ structuredExtractedMetadata
   }
 
   /**
@@ -124,7 +126,8 @@ class PageShredder(document: Document, url: Option[URL] = None)
       appleItunesMetadata = appleItunesMetadata,
       twitterCardMetadata = twitterCardMetadata,
       schemaOrgItems = schemaOrgItems,
-      searchMetadata = searchMetadata
+      searchMetadata = searchMetadata,
+      extractedMetadata = extractedMetadata
     )
 
     val unhandledMetaTags = metaTags.iterator.asScala.filterNot(usedMetaTags.contains)

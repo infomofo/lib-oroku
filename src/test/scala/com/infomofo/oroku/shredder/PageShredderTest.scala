@@ -2,7 +2,7 @@ package com.infomofo.oroku.shredder
 
 import java.net.URL
 
-import com.infomofo.oroku.models.OpenGraphType
+import com.infomofo.oroku.v0.models.OpenGraphType
 import org.scalatest._
 
 import scala.io.Source
@@ -82,5 +82,34 @@ class PageShredderTest extends FlatSpec with Matchers {
     shreddedPage.pageInfo.titles.contains(openGraphMetadata.title.get.value) should be (true)
     shreddedPage.pageInfo.urls.contains(openGraphMetadata.url.get.value) should be (true)
     shreddedPage.pageInfo.descriptions.contains(openGraphMetadata.description.get.value) should be (true)
+
+    shreddedPage.extractedMetadata.isDefined should be (true)
+    shreddedPage.extractedMetadata.get.images.isEmpty should be (false)
+  }
+
+  "Another live page" should "have all the expected data" in {
+    val shreddedPage = PageShredder(new URL("http://www.gilt.com/sale/men/date-night-style-0774/product/1077402853-jachs-resort-woven-sportshirt"))
+    shreddedPage.pageInfo.appleItunesMetadata.isDefined should be (true)
+
+    shreddedPage.pageInfo.openGraphMetadata.isDefined should be (true)
+    val openGraphMetadata = shreddedPage.pageInfo.openGraphMetadata.get
+    openGraphMetadata.description.isDefined should be (true)
+
+    shreddedPage.pageInfo.titles.contains(openGraphMetadata.title.get.value) should be (true)
+    shreddedPage.pageInfo.urls.contains(openGraphMetadata.url.get.value) should be (true)
+    shreddedPage.pageInfo.descriptions.contains(openGraphMetadata.description.get.value) should be (true)
+
+    shreddedPage.extractedMetadata.isDefined should be (true)
+    shreddedPage.extractedMetadata.get.images.isEmpty should be (false)
+  }
+
+  "Yet Another live page" should "have all the expected data" in {
+    val shreddedPage = PageShredder(new URL("http://smile.amazon.com/gp/product/B006MLQHRG?tag=thesweethome-20&linkCode=as2&sa-no-redirect=1"))
+
+    shreddedPage.pageInfo.openGraphMetadata.isDefined should be (true)
+    val openGraphMetadata = shreddedPage.pageInfo.openGraphMetadata.get
+
+    shreddedPage.extractedMetadata.isDefined should be (true)
+    shreddedPage.extractedMetadata.get.images.isEmpty should be (false)
   }
 }
