@@ -47,7 +47,7 @@ private[shredder] trait SchemaOrgMetadataShredder extends BodyShredder with Lazy
       name = itemPropValue("name"),
       alternateName = itemPropValue("alternateName"),
       description = itemPropValue("description"),
-      image = itemPropAttribute("image", "href"),
+      image = itemPropAttribute("image", "src"),
       url = itemPropAttribute("url", "href"),
       sameAs = itemPropAttribute("sameAs", "href"),
       brand = None,

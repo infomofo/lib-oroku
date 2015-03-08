@@ -98,8 +98,8 @@ class PageShredder(document: Document, url: Option[URL] = None)
     val structuredOpenGraphMetadata = openGraphMetadata.toSeq.map(StructuredInformation(_))
     val structuredTwitterData = twitterCardMetadata.toSeq.map(StructuredInformation(_))
     val structuredSearchData = searchMetadata.toSeq.map(StructuredInformation(_))
-    val structuredSchemaOrgMetadata = Some(StructuredInformation(schemaOrgItems))
     val structuredExtractedMetadata = extractedMetadata.toSeq.map(StructuredInformation(_))
+    val structuredSchemaOrgMetadata = Some(StructuredInformation(schemaOrgItems))
 
     structuredOpenGraphMetadata ++ structuredTwitterData ++ structuredSearchData ++ structuredSchemaOrgMetadata ++ structuredExtractedMetadata
   }
