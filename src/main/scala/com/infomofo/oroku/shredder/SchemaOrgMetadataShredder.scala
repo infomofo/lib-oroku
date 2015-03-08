@@ -37,7 +37,7 @@ private[shredder] trait SchemaOrgMetadataShredder extends BodyShredder with Lazy
         models.MetaString(
           value = element.attr(attribute), tag = element.toString
         )
-    }
+    }.filterNot(_.value == "")
   }
 
   private def parseSchemaOrgItem(inputElement: Element): models.SchemaOrgItem = {
