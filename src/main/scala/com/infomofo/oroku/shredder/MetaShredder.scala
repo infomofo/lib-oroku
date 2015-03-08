@@ -50,7 +50,7 @@ trait MetaShredder {
     getMetaEquals (tagName){
       case element =>
         models.MetaString(value = element.attr("content"), tag = element.toString)
-    }
+    }.filterNot(_.value == "")
   }
 
   protected def getMetaBoolean(tagName: String, value: String)(implicit namespace: Option[String], attribute: String, localMetaTags: Elements = metaTags): Option[models.MetaBoolean] = {

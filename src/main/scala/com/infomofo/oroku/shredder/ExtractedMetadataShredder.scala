@@ -29,7 +29,7 @@ private[shredder] trait ExtractedMetadataShredder extends BodyShredder with Lazy
     logger.warn(s"Found ${imageElements.size} images in the body")
     // Go through all images and return all images larger than minimum size in descending order
     imageElements.iterator().asScala.toSeq
-//      .par
+      .par
       .flatMap {
       imageElement =>
         try {
@@ -97,7 +97,7 @@ private[shredder] trait ExtractedMetadataShredder extends BodyShredder with Lazy
             None
         }
     }
-//      .seq
+      .seq
     .sortBy {
       mediaObject =>
         mediaObject.width.get.value * mediaObject.height.get.value
