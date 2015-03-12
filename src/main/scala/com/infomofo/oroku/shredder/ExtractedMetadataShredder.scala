@@ -2,7 +2,7 @@ package com.infomofo.oroku.shredder
 
 import java.awt.Toolkit
 import java.io.ByteArrayInputStream
-import java.net.{HttpURLConnection, URL}
+import java.net.{URLConnection, HttpURLConnection, URL}
 import javax.imageio.ImageIO
 import javax.swing.ImageIcon
 
@@ -19,7 +19,12 @@ import scala.util.Try
 private[shredder] trait ExtractedMetadataShredder extends BodyShredder with LazyLogging {
 
   private val base64Regex = """.*data\:(image\/[a-z]+);base64,(.*)""".r
+
+  private val numRegex = """^(\d+)$""".r
+  private val pxRegex = """^(\d+)px$""".r
   private val decoder = new BASE64Decoder()
+
+  private val bannerThreshold = 3.0 // discard images that are less that 1:3 or 3:1 in height:Width ratio
 
   /**
    * Return the image urls from the body in descending order of expected display size
@@ -69,6 +74,7 @@ private[shredder] trait ExtractedMetadataShredder extends BodyShredder with Lazy
                   connection.setRequestMethod("HEAD")
                   connection.connect()
                   Some(connection.getContentType)
+//                  Some(URLConnection.guessContentTypeFromStream(url.openStream()))
                 } catch {
                   case e: Exception =>
 //                    logger.warn(s"Could not find mimeType for $imageElement", e)
@@ -78,8 +84,29 @@ private[shredder] trait ExtractedMetadataShredder extends BodyShredder with Lazy
             }
           }
 //            lazy val img = new ImageIcon(url)
-            val imgHeight = img.getHeight
-            val imgWidth = img.getWidth
+          val imgHeight = {
+            val specifiedHeight = imageElement.attr("height")
+            specifiedHeight match {
+              case numRegex(height) =>
+                height.toInt
+              case pxRegex(height) =>
+                height.toInt
+              case _ =>
+                img.getHeight
+            }
+          }
+
+            val imgWidth  = {
+              val specifiedWidth = imageElement.attr("width")
+              specifiedWidth match {
+                case numRegex(width) =>
+                  width.toInt
+                case pxRegex(width) =>
+                  width.toInt
+                case _ =>
+                  img.getWidth
+              }
+            }
 
             val mediaObject = models.MediaObject (
               url = models.MetaString (value = urlString, tag = imageElement.toString),
@@ -90,6 +117,8 @@ private[shredder] trait ExtractedMetadataShredder extends BodyShredder with Lazy
             logger.warn(s"media object found: $mediaObject")
             Some(
               mediaObject
+            ).filterNot(
+              _.url.value.contains("sprite")
             )
         } catch {
           case e: Exception =>
@@ -98,6 +127,17 @@ private[shredder] trait ExtractedMetadataShredder extends BodyShredder with Lazy
         }
     }
       .seq
+      .filterNot(
+      mediaObject =>
+        (mediaObject.width.get.value.toFloat / mediaObject.height.get.value.toFloat) > bannerThreshold
+    )
+      .filterNot(
+      mediaObject =>
+        (mediaObject.height.get.value.toFloat / mediaObject.width.get.value.toFloat) > bannerThreshold
+    ).filter {
+      mediaObject =>
+        (mediaObject.width.get.value * mediaObject.height.get.value) > 5000
+    }
     .sortBy {
       mediaObject =>
         mediaObject.width.get.value * mediaObject.height.get.value

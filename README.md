@@ -42,6 +42,15 @@ In addition, it provides aggregate values that have been aggregated from all sou
     locations: Seq[String]
     retrievedAt: org.joda.time.DateTime
 
+## Bundling
+
+Right now oroku is not hosted on a dependency management site, so it must be packaged and included as a library dependency
+in your java or scala project.
+
+    sbt package
+
+copy that built jar into your projects lib directory to use it.
+
 ## Contributing
 
 1. Fork it!
